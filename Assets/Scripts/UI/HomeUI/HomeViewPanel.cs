@@ -31,8 +31,8 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
             case "Start":
                 OnStartBtnClicked();
                 break;
-            case "Achievement":
-                OnAchievementBtnClicked();
+            case "Book":
+                OnBookBtnClicked();
                 break;
             case "Setting":
                 OnSettingBtnClicked();
@@ -49,9 +49,9 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
         ViewModel.StartGame();
     }
 
-    private void OnAchievementBtnClicked()
+    private void OnBookBtnClicked()
     {
-        Controller.Show<AchievementViewPanel>();
+        Controller.Show<BookViewPanel>();
     }
     
     private void OnSettingBtnClicked()

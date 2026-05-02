@@ -5553,7 +5553,7 @@ GameObject:
   - component: {fileID: 1344183866}
   - component: {fileID: 1344183865}
   m_Layer: 5
-  m_Name: Achievement
+  m_Name: Book
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6552,7 +6552,7 @@ GameObject:
   - component: {fileID: 1493333408}
   - component: {fileID: 1493333410}
   m_Layer: 5
-  m_Name: Achievement
+  m_Name: Book
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

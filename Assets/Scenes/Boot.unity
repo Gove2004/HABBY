@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 490323635}
   - component: {fileID: 490323636}
   - component: {fileID: 490323638}
-  - component: {fileID: 490323637}
+  - component: {fileID: 490323639}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -168,20 +168,15 @@ MonoBehaviour:
   ActorPrefab: {fileID: 0}
   WarriorPrefab: {fileID: 0}
   WizardPrefab: {fileID: 0}
-  EnemyPrefab: {fileID: 0}
+  NormalEnemyPrefab: {fileID: 0}
+  ActorBossPrefab: {fileID: 0}
+  GodBossPrefab: {fileID: 0}
+  LargeBossPrefab: {fileID: 0}
+  BufferEnemyPrefab: {fileID: 0}
+  ShooterEnemyPrefab: {fileID: 0}
   ActorBulletPrefab: {fileID: 0}
---- !u!114 &490323637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 490323634}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4657e8421f16726498b5a5194c3a5a6f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  FloatTextPrefab: {fileID: 0}
+  ExpBallPrefab: {fileID: 0}
 --- !u!114 &490323638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,6 +187,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 38c9e9adb332ed3448ad743f0893c616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &490323639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490323634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1646dec506572854787e09aa764097f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &519420028
@@ -275,7 +282,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using GoveKits.Runtime.Core;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class ActorBullet : MonoBehaviour, IPoolable
     private bool isPlayerBullet;
     private int damage;
     private float lifeTime;
+    private int throughCount; // 穿透剩余数，0表示不穿透
 
     private Rigidbody2D rb;
     private TrailRenderer trailRenderer;
@@ -34,8 +36,12 @@ public class ActorBullet : MonoBehaviour, IPoolable
             Character enemy = collision.GetComponent<Character>();
             if (enemy != null)
             {
-                enemy.hpComponent.TakeDamage(damage);
-                isDead = true;
+                enemy.TakeDamageFrom(damage, transform.position);
+                throughCount--;
+                if (throughCount < 0)
+                {
+                    isDead = true;
+                }
             }
         }
         
@@ -46,8 +52,9 @@ public class ActorBullet : MonoBehaviour, IPoolable
     }
 
 
-    private void MyDestroy()
+    private async void MyDestroy()
     {
+        // 等待轨迹渲染
         PoolCore.Return(this.gameObject);
     }
 
@@ -59,6 +66,7 @@ public class ActorBullet : MonoBehaviour, IPoolable
         damage = 0;
         lifeTime = 0f;
         rb.linearVelocity = Vector2.zero;
+        transform.localScale = Vector3.one * 0.25f; // 重置为默认大小
     }
 
 
@@ -88,6 +96,18 @@ public class ActorBullet : MonoBehaviour, IPoolable
             trailRenderer.Clear();
         }
         rb.linearVelocity = direction.normalized * speed;
+        return this;
+    }
+
+    public ActorBullet SetSize(float size)
+    {
+        transform.localScale *= size;
+        return this;
+    }
+
+    public ActorBullet SetThroughCount(int count)
+    {
+        throughCount = count;
         return this;
     }
 }

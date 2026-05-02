@@ -1,41 +1,40 @@
+﻿using GoveKits.Runtime.UI;
 using UnityEngine;
 
-public class NormalEnemy : Character
+public class NormalEnemy : Enemy
 {
-    Character player;
-
-    private void Start()
-    {
-        Setup(1);
-
-        player = BattleManager.Instance.playerCharacter;
-    }
+    private float attackTimer = 0f;
+    private float attackCooldown = 1f;
 
     protected override void Update()
     {
         base.Update();
+        attackTimer -= Time.deltaTime;
     }
 
     private void FixedUpdate()
     {
         if (player != null)
         {
-            Vector2 direction = (player.transform.position - transform.position).normalized;
-            transform.Translate(moveComponent.MoveSpeed * Time.deltaTime * direction);
+            MoveTowardsPlayer();
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (attackTimer <= 0f && collision.CompareTag("Player"))
+        {
+            var p = collision.GetComponent<Player>();
+            if (p != null)
+            {
+                p.TakeDamageFrom(CurrentAttackPower, transform.position);
+                attackTimer = attackCooldown;
+            }
+        }
+    }
 
     public override void Setup(int level)
     {
         base.Setup(level);
-
-        hpComponent.OnDeath += MyDestroy;
-    }
-
-
-    private void MyDestroy()
-    {
-        Destroy(this.gameObject);
     }
 }

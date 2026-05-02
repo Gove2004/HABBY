@@ -1,20 +1,24 @@
 using GoveKits.Runtime.Core;
 using UnityEngine;
 
-public class Actor : Character
+public class Actor : Player
 {
     private Rigidbody2D rb;
-    private float shootRate = 1f;
-    private float shootCooldown => shootRate / attackComponent.AttackSpeed;
+    public float AttackSpeed;
     private float shootTimer = 0f;
+
+    public float BulletSpeed;
+    public float BulletSize;
+    public float BulletLifeTime;
+    public int BulletThroughCount = 0; // 穿透数，0表示不穿透
+    public int BulletFireCount = 1; // 发射数，1表示单发
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
         Setup(1);
-
-        BattleManager.Instance.RegisterPlayer(this);
     }
 
 
@@ -24,13 +28,11 @@ public class Actor : Character
         
         shootTimer += Time.deltaTime;
 
-        if (MyInputManager.Instance.IsMouseHeld && shootTimer >= shootCooldown)
+        if (MyInputManager.Instance.IsMouseHeld && shootTimer >= 1f / AttackSpeed)
         {
             Vector2 mousePos = MyInputManager.Instance.MousePosition;
             Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-            Vector2 direction = (worldMousePos - rb.position).normalized;
-
-            Shoot(direction);
+            Shoot(worldMousePos);
             
             shootTimer = 0f; // 重置射击计时器
         }
@@ -39,7 +41,7 @@ public class Actor : Character
     private void FixedUpdate()
     {
         Vector2 inputDir = MyInputManager.Instance.InputDirection;
-        rb.linearVelocity = inputDir * moveComponent.MoveSpeed;
+        rb.linearVelocity = inputDir * MoveSpeed;
     }
 
 
@@ -47,17 +49,58 @@ public class Actor : Character
     {
         base.Setup(level);
 
-
+        AttackSpeed = 1.0f;
+        BulletSpeed = 10.0f;
+        BulletSize = 1.0f;
+        BulletLifeTime = 2.0f;
     }
 
 
-    private void Shoot(Vector2 direction)
+    [Header("散射参数")]
+    public float baseSpreadAngle = 15f;     // 基础散射角度（单发时）
+    public float maxSpreadAngle = 90f;      // 最大散射角度
+    public float spreadGrowthRate = 0.5f;   // 散射增长速率
+    public bool dynamicSpread = true;       // 是否动态调整散射角度
+
+    private void Shoot(Vector2 targetPos)
     {
+        Vector2 baseDirection = (targetPos - (Vector2)transform.position).normalized;
         GameObject bulletObj = SpawnManager.Instance.GetBulletPrefab();
         
-        ActorBullet bullet = PoolCore.Get(bulletObj).GetComponent<ActorBullet>();
-        bullet.SetPlayerBullet().SetDamage(attackComponent.AttackPower);
-        bullet.SetLifeTime(2.0f); // 设置子弹的生命周期
-        bullet.SetMotion(transform.position, direction, 10.0f); // 设置子弹
+        // 动态计算散射角度
+        float currentSpreadAngle = dynamicSpread 
+            ? CalculateDynamicSpreadAngle() 
+            : baseSpreadAngle;
+        
+        // 计算每颗子弹的角度
+        float angleStep = BulletFireCount > 1 ? currentSpreadAngle / (BulletFireCount - 1) : 0f;
+        float startAngle = -currentSpreadAngle / 2f;
+        
+        for (int i = 0; i < BulletFireCount; i++)
+        {
+            ActorBullet bullet = PoolCore.Get(bulletObj).GetComponent<ActorBullet>();
+            bullet.SetPlayerBullet().SetDamage(AttackPower);
+            bullet.SetLifeTime(BulletLifeTime);
+            bullet.SetSize(BulletSize);
+            bullet.SetThroughCount(BulletThroughCount);
+            
+            // 计算当前子弹的角度
+            float currentAngle = startAngle + angleStep * i;
+            Vector2 bulletDirection = Quaternion.Euler(0, 0, currentAngle) * baseDirection;
+            
+            bullet.SetMotion(transform.position, bulletDirection, BulletSpeed);
+        }
+    }
+
+    // 动态计算散射角度
+    private float CalculateDynamicSpreadAngle()
+    {
+        if (BulletFireCount <= 1) return baseSpreadAngle;
+        
+        // 根据子弹数量计算散射角度
+        float t = Mathf.Clamp01((BulletFireCount - 1) / 10f); // 假设10发子弹达到最大散射
+        float spreadAngle = Mathf.Lerp(baseSpreadAngle, maxSpreadAngle, t * spreadGrowthRate);
+        
+        return spreadAngle;
     }
 }

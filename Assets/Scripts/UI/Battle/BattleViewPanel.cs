@@ -7,7 +7,18 @@ using UnityEngine;
 
 public class BattleViewPanel : ViewPanel<BattleViewModel>
 {
+    public override void OnShow(object payload = null)
+    {
+        base.OnShow(payload);
 
+        ViewModel.playerCharacter.OnExpChanged += (v) => OnPlayerLevelExpChanged(false);
+        ViewModel.playerCharacter.OnLevelUp += (v) => OnPlayerLevelExpChanged(true);
+    }
+
+    public override void OnHide()
+    {
+        base.OnHide();
+    }
 
     protected override void OnDataChanged(object sender, PropertyChangedEventArgs e)
     {
@@ -32,7 +43,9 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
     {
         switch (btnName)
         {
-            
+            case "Pause":
+                Controller.Show<PauseViewPanel>();
+                break;
         }
     }
 
@@ -44,5 +57,24 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
     {
         ViewModel.UpdateBattle(Time.deltaTime);
     }
+
+
+    private void OnPlayerLevelExpChanged(bool isLevelUp)
+    {
+        if (isLevelUp)
+        {
+            // 显示升级特效
+            TMPTexts["Level"].text = $"Level {ViewModel.playerCharacter.Level}";
+
+            Controller.Show<ChooseViewPanel>();
+        }
+        else
+        {
+            TMPTexts["Exp"].text = $"{ViewModel.playerCharacter.Exp } / {ViewModel.playerCharacter.NextLevelExpThreshold} EXP";
+            Images["LevelExpBar"].fillAmount = ViewModel.playerCharacter.ExpProgress;
+        }
+        
+    }
+
 
 }

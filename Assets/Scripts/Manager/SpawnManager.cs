@@ -9,10 +9,19 @@ public class SpawnManager : MonoSingleton<SpawnManager>
     public GameObject WizardPrefab;
 
     [Header("Enemy Prefabs")]
-    public GameObject EnemyPrefab;
+    public GameObject NormalEnemyPrefab;
+    public GameObject ActorBossPrefab;
+    public GameObject GodBossPrefab;
+    public GameObject LargeBossPrefab;
+    public GameObject BufferEnemyPrefab;
+    public GameObject ShooterEnemyPrefab;
 
     [Header("Bullet Prefabs")]
     public GameObject ActorBulletPrefab;
+
+    [Header("Other Prefabs")]
+    public GameObject FloatTextPrefab;
+    public GameObject ExpBallPrefab;
 
     protected override void Init()
     {
@@ -22,9 +31,17 @@ public class SpawnManager : MonoSingleton<SpawnManager>
         WarriorPrefab = Resources.Load<GameObject>("Prefabs/Character/Warrior");
         WizardPrefab = Resources.Load<GameObject>("Prefabs/Character/Wizard");
 
-        EnemyPrefab = Resources.Load<GameObject>("Prefabs/Enemy/Enemy");
+        NormalEnemyPrefab = Resources.Load<GameObject>("Prefabs/Enemy/NormalEnemy");
+        ActorBossPrefab = Resources.Load<GameObject>("Prefabs/Enemy/ActorBoss");
+        GodBossPrefab = Resources.Load<GameObject>("Prefabs/Enemy/GodBoss");
+        LargeBossPrefab = Resources.Load<GameObject>("Prefabs/Enemy/LargeBoss");
+        BufferEnemyPrefab = Resources.Load<GameObject>("Prefabs/Enemy/BufferEnemy");
+        ShooterEnemyPrefab = Resources.Load<GameObject>("Prefabs/Enemy/ShooterEnemy");
 
         ActorBulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet/ActorBullet");
+
+        ExpBallPrefab = Resources.Load<GameObject>("Prefabs/Other/ExpBall");
+        FloatTextPrefab = Resources.Load<GameObject>("Prefabs/Other/FloatText");
     }
 
 
@@ -45,13 +62,40 @@ public class SpawnManager : MonoSingleton<SpawnManager>
     }
 
 
-    public GameObject GetEnemyPrefab()
+    public GameObject GetEnemyPrefab(EnemyType enemyType)
     {
-        return EnemyPrefab;
+        switch (enemyType)
+        {
+            case EnemyType.NormalEnemy:
+                return NormalEnemyPrefab;
+            case EnemyType.ActorBoss:
+                return ActorBossPrefab;
+            case EnemyType.GodBoss:
+                return GodBossPrefab;
+            case EnemyType.LargeBoss:
+                return LargeBossPrefab;
+            case EnemyType.BufferEnemy:
+                return BufferEnemyPrefab;
+            case EnemyType.ShooterEnemy:
+                return ShooterEnemyPrefab;
+            default:
+                LogCore.Error(nameof(SpawnManager), $"Unknown EnemyType: {enemyType}");
+                return null;
+        }
     }
 
     public GameObject GetBulletPrefab()
     {
         return ActorBulletPrefab;
+    }
+
+    public GameObject GetExpBallPrefab()
+    {
+        return ExpBallPrefab;
+    }
+
+    public GameObject GetFloatTextPrefab()
+    {
+        return FloatTextPrefab;
     }
 }
