@@ -9,8 +9,8 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
     {
         base.OnShow(payload);
 
-        TMPTexts["MaxScore"].text = $"单局最高: {VMContainer.Get<GameViewModel>().MaxScore}\t";
-        TMPTexts["NowScore"].text = $"剩余金币: {VMContainer.Get<GameViewModel>().NowScore}\t";
+        TMPTexts["MaxScore"].text = $"单局最高得分: {VMContainer.Get<GameViewModel>().MaxScore}  ";
+        TMPTexts["NowScore"].text = $"剩余可用金币: {VMContainer.Get<GameViewModel>().NowScore}  ";
     }
 
 

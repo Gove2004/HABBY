@@ -1,5 +1,6 @@
 
 
+using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class GodBoss : Enemy
@@ -12,8 +13,19 @@ public class GodBoss : Enemy
 
     public override void Setup(int level)
     {
-        base.Setup(level);
-        buffTimer = Random.Range(2f, 3f);
+		this.level = level;
+        MaxHP = level;
+        CurrentHP = MaxHP;
+        AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 3));
+        DefensePower = Mathf.FloorToInt(level / 2);
+        MoveSpeed = 2f;
+
+		buffTimer = Random.Range(0f, BuffInterval);
+        player = VMContainer.Get<BattleViewModel>().playerCharacter;
+        OnDeath -= MyDestroy;
+        OnDeath += MyDestroy;
+
+        if (hpBar != null) hpBar.SetCharacter(this);
     }
 
 	protected override void Update()
@@ -50,19 +62,30 @@ public class GodBoss : Enemy
 
 	private void ApplyDivineBuffs()
 	{
-		Enemy[] enemies = Object.FindObjectsOfType<Enemy>();
-		foreach (Enemy enemy in enemies)
+		Enemy[] all = VMContainer.Get<BattleViewModel>().GetAllEnemies();
+		var candidates = new System.Collections.Generic.List<Enemy>();
+		foreach (var e in all)
 		{
-			if (enemy == null)
-			{
-				continue;
-			}
+			if (e == null || e == this) continue;
+			candidates.Add(e);
+		}
 
-			if (Vector2.Distance(transform.position, enemy.transform.position) > BuffRange)
-			{
-				continue;
-			}
+		if (candidates.Count == 0) return;
 
+		int n = 5;
+		// shuffle candidates (Fisher-Yates)
+		for (int i = 0; i < candidates.Count; i++)
+		{
+			int j = Random.Range(i, candidates.Count);
+			var tmp = candidates[i];
+			candidates[i] = candidates[j];
+			candidates[j] = tmp;
+		}
+
+		int take = Mathf.Min(n, candidates.Count);
+		for (int k = 0; k < take; k++)
+		{
+			var enemy = candidates[k];
 			BaseBuff attackBuff = BuffManager.Instance.GetEnemyBuff();
 			BaseBuff speedBuff = BuffManager.Instance.GetEnemyBuff();
 			BaseBuff sustainBuff = BuffManager.Instance.GetEnemyBuff();

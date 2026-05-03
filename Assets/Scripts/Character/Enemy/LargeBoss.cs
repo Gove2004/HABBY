@@ -1,5 +1,6 @@
 
 
+using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class LargeBoss : Enemy
@@ -12,9 +13,26 @@ public class LargeBoss : Enemy
 
 	private const float ChaseDistance = 5f;
 	private const float ChargeCooldown = 5f;
-	private const float ChargeDuration = 0.6f;
-	private const float ChargeSpeedMultiplier = 3.5f;
-	private const float ChargeChance = 0.45f;
+	private const float ChargeDuration = 0.5f;
+	private const float ChargeSpeedMultiplier = 2f;
+	private const float ChargeChance = 0.5f;
+
+
+	public override void Setup(int level)
+    {
+		this.level = level;
+        MaxHP = 10 * level;
+        CurrentHP = MaxHP;
+        AttackPower = level;
+        DefensePower = Mathf.FloorToInt(level / 2);
+        MoveSpeed = 1f;
+
+        player = VMContainer.Get<BattleViewModel>().playerCharacter;
+        OnDeath -= MyDestroy;
+        OnDeath += MyDestroy;
+
+        if (hpBar != null) hpBar.SetCharacter(this);
+    }
 
 	protected override void Update()
 	{
@@ -87,4 +105,6 @@ public class LargeBoss : Enemy
 		target.TakeDamageFrom(damage, transform.position);
 		attackTimer = attackCooldown;
 	}
+
+	
 }

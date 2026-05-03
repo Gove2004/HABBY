@@ -27,6 +27,16 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
             case nameof(ViewModel.BattleTime):
                 TMPTexts["BattleTime"].text = $"{FormatTime(ViewModel.BattleTime)}";
                 break;
+            case nameof(ViewModel.Score):
+                TMPTexts["Score"].text = $"得分: {ViewModel.Score}";
+                TMPTexts["MaxScore"].text = $"最高分: {ViewModel.MaxScore}";
+                break;
+            case nameof(ViewModel.IsBattleActive):
+                if (!ViewModel.IsBattleActive)
+                {
+                    Controller.Show<OverViewPanel>();
+                }
+                break;
         }
     }
 

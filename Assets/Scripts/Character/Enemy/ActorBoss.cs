@@ -1,5 +1,6 @@
 
 using GoveKits.Runtime.Core;
+using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class ActorBoss : Enemy
@@ -17,14 +18,25 @@ public class ActorBoss : Enemy
 
 	private const float ShootDistance = 10f;
 	private const float RetreatDistance = 15f;
-	private const float RestDuration = 1.5f;
-	private const float LaserBulletSpeed = 16f;
-	private const float FanBulletSpeed = 12f;
+	private const float RestDuration = 2f;
+	private const float LaserBulletSpeed = 5f;
+	private const float FanBulletSpeed = 5f;
 
 	public override void Setup(int level)
     {
-        base.Setup(level);
-        currentState = BossState.Approach;
+		this.level = level;
+        MaxHP = 5 * level;
+        CurrentHP = MaxHP;
+        AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 2));
+        DefensePower = Mathf.FloorToInt(level / 2);
+        MoveSpeed = 1f;
+
+		currentState = BossState.Approach;
+        player = VMContainer.Get<BattleViewModel>().playerCharacter;
+        OnDeath -= MyDestroy;
+        OnDeath += MyDestroy;
+
+        if (hpBar != null) hpBar.SetCharacter(this);
     }
 
 
@@ -97,7 +109,7 @@ public class ActorBoss : Enemy
 
 	private void FireLaser()
 	{
-		SpawnBullet(1, 0f, 1.6f, 3f, LaserBulletSpeed, 3, 3f);
+		SpawnBullet(3, 30f, 1.6f, 3f, LaserBulletSpeed, 3, 3f);
 	}
 
 

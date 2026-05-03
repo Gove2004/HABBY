@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public static class DifficultyConfig
 {
-    public static List<List<int>> difficultySettings = new List<List<int>>()
+    public static readonly List<List<int>> difficultySettings = new List<List<int>>()
     {
         new List<int>() { 1, 0, 0, 0, 0, 0},
         new List<int>() { 2, 0, 0, 0, 0, 0},

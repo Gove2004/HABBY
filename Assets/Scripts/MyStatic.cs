@@ -6,7 +6,7 @@ public static class MyStatic
     // 获取经验
     public static int GetExpThresholdForLevel(int nextLevel)
     {
-        return nextLevel * 2;
+        return nextLevel * 2 - 1;
     }
 
     // 生成正方形纹理

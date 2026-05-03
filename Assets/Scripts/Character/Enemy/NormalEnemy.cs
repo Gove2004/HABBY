@@ -1,10 +1,27 @@
-﻿using GoveKits.Runtime.UI;
+﻿using System;
+using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class NormalEnemy : Enemy
 {
     private float attackTimer = 0f;
     private float attackCooldown = 1f;
+
+    public override void Setup(int level)
+    {
+        this.level = level;
+        MaxHP = 3 * level;
+        CurrentHP = MaxHP;
+        AttackPower = level;
+        DefensePower = Mathf.FloorToInt(level / 3);
+        MoveSpeed = 2f;
+
+        player = VMContainer.Get<BattleViewModel>().playerCharacter;
+        OnDeath -= MyDestroy;
+        OnDeath += MyDestroy;
+
+        if (hpBar != null) hpBar.SetCharacter(this);
+    }
 
     protected override void Update()
     {
@@ -33,8 +50,5 @@ public class NormalEnemy : Enemy
         }
     }
 
-    public override void Setup(int level)
-    {
-        base.Setup(level);
-    }
+    
 }

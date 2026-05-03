@@ -9,7 +9,6 @@ public abstract class Enemy : Character
 {
     protected Player player;
     protected Rigidbody2D rb;
-    public int Level { get; protected set; }
 
     private readonly List<TimedStatModifier> timedStatModifiers = new List<TimedStatModifier>();
     private float attackPowerMultiplier = 1f;
@@ -35,6 +34,21 @@ public abstract class Enemy : Character
     }
 
 
+    public void SetBoost(bool isMoreHP, bool isMoreDamage)
+    {
+        if (isMoreHP)
+        {
+            MaxHP = Mathf.RoundToInt(MaxHP * 2f);
+            CurrentHP = MaxHP;
+        }
+
+        if (isMoreDamage)
+        {
+            AttackPower = Mathf.RoundToInt(AttackPower * 2f);
+        }
+    }
+
+
     protected virtual void MyDestroy()
     {
         // 生成等同于 自身等级的经验球
@@ -47,26 +61,12 @@ public abstract class Enemy : Character
             expBallInstance.transform.position = transform.position;
             ExpBall expBall = expBallInstance.GetComponent<ExpBall>();
             
-            int cost = Mathf.Min(exp, 5);
+            int cost = Mathf.Min(exp, 10); // 每个经验球最多10点经验
             expBall.Setup(cost);
             exp -= cost;
         }
 
         PoolCore.Return(this.gameObject);
-    }
-
-
-    public override void Setup(int level)
-    {
-        // 随机 （sqrt(level) - level）
-        level = Mathf.Max(1, level + Random.Range(-level, (int)Mathf.Sqrt(level) + 1));
-        this.Level = level;
-        
-        base.Setup(level);
-
-        player = VMContainer.Get<BattleViewModel>().playerCharacter;
-        OnDeath -= MyDestroy;
-        OnDeath += MyDestroy;
     }
 
 

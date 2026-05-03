@@ -5,6 +5,16 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
+    // Level Component Fields
+    protected int level;
+    protected int exp;
+    protected int nextLevelExpThreshold;
+    public int Level => level;
+    public int Exp => exp;
+    public int NextLevelExpThreshold => nextLevelExpThreshold;
+    public float ExpProgress => nextLevelExpThreshold > 0 ? (float)exp / nextLevelExpThreshold : 0f;
+    public event Action<int> OnLevelUp;
+    protected void TriggerLevelUp() => OnLevelUp?.Invoke(level);
     // HP Component Fields
     public int MaxHP;
     public int CurrentHP;
@@ -24,28 +34,17 @@ public abstract class Character : MonoBehaviour
     public Dictionary<string, int> BuffCounters = new Dictionary<string, int>();
 
     protected SpriteRenderer sr;
+    protected HPBar hpBar;
 
     protected virtual void Awake()
     {
         sr = GetComponentInChildren<SpriteRenderer>();
         if (sr == null) sr = GetComponent<SpriteRenderer>();
+        hpBar = GetComponentInChildren<HPBar>();
+        
     }
 
-    public virtual void Setup(int initialLevel)
-    {
-        // HP Init
-        MaxHP = 3 * initialLevel;
-        CurrentHP = MaxHP;
-
-        // Attack Init
-        AttackPower = Mathf.FloorToInt(MathF.Sqrt(initialLevel));
-
-        // Defense Init
-        DefensePower = Mathf.FloorToInt(MathF.Sqrt(initialLevel) / 2);
-
-        // Move Init
-        MoveSpeed = 2.5f;
-    }
+    public abstract void Setup(int initialLevel);
 
     protected virtual void Update()
     {
@@ -58,7 +57,7 @@ public abstract class Character : MonoBehaviour
         
         // Knockback
         Vector2 knockbackDirection = (transform.position - (Vector3)fromPosition).normalized;
-        float knockbackDistance = 0.5f; // Adjust as needed
+        float knockbackDistance = 1f; // Adjust as needed
         transform.DOMove((Vector2)transform.position + knockbackDirection * knockbackDistance, 0.2f);
     }
 

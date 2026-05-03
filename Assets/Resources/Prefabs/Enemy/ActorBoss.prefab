@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6559640715368299250}
   - component: {fileID: 1616762699701486998}
   - component: {fileID: 872792733331275523}
-  - component: {fileID: 4734451803259012065}
+  - component: {fileID: -2371862254136587727}
   m_Layer: 12
-  m_Name: GodBoss
+  m_Name: ActorBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1538695890387686252}
+  - {fileID: 1505340295301735646}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1616762699701486998
@@ -79,8 +79,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 75f5f34dc1b5347e0b8351032682f224, type: 3}
-  m_Color: {r: 0.38431376, g: 0, b: 0.4784314, a: 1}
+  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
+  m_Color: {r: 0.3863752, g: 0, b: 0.47798735, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -126,7 +126,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &4734451803259012065
+--- !u!114 &-2371862254136587727
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,7 +135,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1327481005344277778}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db45f4f01dab6f54caf663bca24e9e14, type: 3}
+  m_Script: {fileID: 11500000, guid: 2571a8a4b9b3e3446a29bae85e6a7308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHP: 0
@@ -143,7 +143,7 @@ MonoBehaviour:
   AttackPower: 0
   DefensePower: 0
   MoveSpeed: 0
---- !u!1001 &6245038256287001571
+--- !u!1001 &6274734685395737681
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -256,8 +256,8 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ad3a08aaee3a9f4fbb33681697a71e3, type: 3}
---- !u!224 &1538695890387686252 stripped
+--- !u!224 &1505340295301735646 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4895517206971906191, guid: 3ad3a08aaee3a9f4fbb33681697a71e3, type: 3}
-  m_PrefabInstance: {fileID: 6245038256287001571}
+  m_PrefabInstance: {fileID: 6274734685395737681}
   m_PrefabAsset: {fileID: 0}

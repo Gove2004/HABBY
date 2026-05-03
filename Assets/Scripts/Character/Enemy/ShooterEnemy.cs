@@ -1,6 +1,8 @@
 
 
+using System;
 using GoveKits.Runtime.Core;
+using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class ShooterEnemy : Enemy
@@ -17,15 +19,26 @@ public class ShooterEnemy : Enemy
 
 	private const float ShootDistance = 10f;
 	private const float RetreatDistance = 15f;
-	private const float RestDuration = 1.2f;
+	private const float RestDuration = 2f;
 	private const float ShootScatterAngle = 10f;
 	private const int ShootCount = 1;
-	private const float BulletSpeed = 11f;
+	private const float BulletSpeed = 5f;
 
 	public override void Setup(int level)
     {
-        base.Setup(level);
-        currentState = ShooterState.Approach;
+		this.level = level;
+        MaxHP = level;
+        CurrentHP = MaxHP;
+        AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 3));
+        DefensePower = Mathf.FloorToInt(level / 2);
+        MoveSpeed = 2f;
+
+		currentState = ShooterState.Approach;
+        player = VMContainer.Get<BattleViewModel>().playerCharacter;
+        OnDeath -= MyDestroy;
+        OnDeath += MyDestroy;
+
+        if (hpBar != null) hpBar.SetCharacter(this);
     }
 
 	protected override void Update()
@@ -105,7 +118,7 @@ public class ShooterEnemy : Enemy
 				continue;
 			}
 
-			float currentAngle = startAngle + angleStep * i + Random.Range(-2f, 2f);
+			float currentAngle = startAngle + angleStep * i + UnityEngine.Random.Range(-2f, 2f);
 			Vector2 direction = Quaternion.Euler(0f, 0f, currentAngle) * baseDirection;
 			bullet.SetDamage(CurrentAttackPower)
 				.SetLifeTime(2.5f)

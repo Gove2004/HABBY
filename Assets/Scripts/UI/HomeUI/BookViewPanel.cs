@@ -7,6 +7,8 @@ public class BookViewPanel : ViewPanel<BookViewModel>
 {
 
 
+
+
     protected override void OnDataChanged(object sender, PropertyChangedEventArgs e)
     {
         

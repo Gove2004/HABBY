@@ -45,14 +45,27 @@ public class Actor : Player
     }
 
 
-    public override void Setup(int level)
+    public override void Setup(int level = 1)
     {
-        base.Setup(level);
+        this.level = level;
+        exp = 0;
+        nextLevelExpThreshold = MyStatic.GetExpThresholdForLevel(level);
+        
+        MaxHP = 10 * level;
+        CurrentHP = MaxHP;
+        AttackPower = level;
+        DefensePower = Mathf.FloorToInt(level / 2);
+        MoveSpeed = 2.5f;
+
+        CritRate = 0.0f;
+        CritDamageMultiplier = 2.0f;
 
         AttackSpeed = 1.0f;
         BulletSpeed = 10.0f;
         BulletSize = 1.0f;
         BulletLifeTime = 2.0f;
+
+        if (hpBar != null) hpBar.SetCharacter(this);
     }
 
 

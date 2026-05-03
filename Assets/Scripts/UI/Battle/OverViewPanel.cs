@@ -3,7 +3,7 @@ using GoveKits.Runtime.Core;
 using GoveKits.Runtime.UI;
 using UnityEngine;
 
-public class PauseViewPanel : ViewPanel<PauseViewModel>
+public class OverViewPanel : ViewPanel<OverViewModel>
 {
     public override void OnShow(object payload = null)
     {
@@ -28,18 +28,14 @@ public class PauseViewPanel : ViewPanel<PauseViewModel>
     }
 
 
-
     protected override void OnButtonClicked(string btnName)
     {
         switch (btnName)
         {
-            case "Resume":
-                Controller.HidePopup<PauseViewPanel>();
-                break;
-            case "Quit":
-                Controller.HidePopup<PauseViewPanel>();
+            case "OK":
+                Controller.HidePopup<OverViewPanel>();
                 VMContainer.Get<BattleViewModel>().ClearBattle();
-
+                
                 SceneCore.Load("Home", UnityEngine.SceneManagement.LoadSceneMode.Additive);
                 SceneCore.UnloadAsync("Battle");
                 break;

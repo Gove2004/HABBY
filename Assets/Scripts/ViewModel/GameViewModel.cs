@@ -9,10 +9,11 @@ public class GameViewModel : ViewModel
 
     public void Initialize()
     {
-        LogCore.Log("GameViewModel Initialized");
-
         MaxScore = PrefsCore.GetInt(MaxScoreKey, 0);
         NowScore = PrefsCore.GetInt(NowScoreKey, 0);
+
+        NowScore = 1000;  // 测试用，正式发布前请删除
+        LogCore.Log($"注入测试数据: NowScore = {NowScore}");
     }
 
     public void ExitGame()
@@ -58,6 +59,47 @@ public class GameViewModel : ViewModel
             return true;
         }
         return false;
+    }
+
+    #endregion
+
+
+
+    #region Save Data
+
+    public float GetNowAttribute(HeroType heroType, string attribute)
+    {
+        int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
+        return HeroInfoConfig.ActorInfo[attribute][level].value;
+    }
+
+    public int GetNowPrice(HeroType heroType, string attribute)
+    {
+        int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
+        return HeroInfoConfig.ActorInfo[attribute][level].price;
+    }
+
+    public bool CanUpgradeAttribute(HeroType heroType, string attribute)
+    {
+        int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
+        if (level >= HeroInfoConfig.ActorInfo[attribute].Count - 1)
+            return false;
+        int price = HeroInfoConfig.ActorInfo[attribute][level].price;
+        return NowScore >= price;
+    }
+
+    public void UpgradeAttribute(HeroType heroType, string attribute)
+    {
+        if (!CanUpgradeAttribute(heroType, attribute))
+            return;
+
+        int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
+        int price = HeroInfoConfig.ActorInfo[attribute][level].price;
+        if (TrySpendcore(price))
+        {
+            PrefsCore.SetInt($"{heroType}_{attribute}_Level", level + 1);
+            PrefsCore.Save();
+        }
     }
 
     #endregion
