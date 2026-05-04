@@ -13,7 +13,15 @@ public class HeroInfoItem : MonoBehaviour
 
     public void SetData(HeroInfoItemData data)
     {
-        nameTMP.text = $"{data.Key}: {VMContainer.Get<GameViewModel>().GetNowAttribute(HeroType.Actor, data.Key)}";
+        if (data.isPercentage)
+        {
+            nameTMP.text = $"{data.Key}: {VMContainer.Get<GameViewModel>().GetNowAttribute(HeroType.Actor, data.Key) * 100:0.0}%";
+        }
+        else
+        {
+            nameTMP.text = $"{data.Key}: {VMContainer.Get<GameViewModel>().GetNowAttribute(HeroType.Actor, data.Key)}";
+        }
+
         priceTMP.text = $"{VMContainer.Get<GameViewModel>().GetNowPrice(HeroType.Actor, data.Key)}  ";
         buyBtn.interactable = VMContainer.Get<GameViewModel>().CanUpgradeAttribute(HeroType.Actor, data.Key);
         buyBtn.onClick.RemoveAllListeners();
@@ -33,10 +41,11 @@ public class HeroInfoItem : MonoBehaviour
 public class HeroInfoItemData
 {
     public string Key;
+    public bool isPercentage; // 是否为百分比属性，决定显示格式
 
-
-    public HeroInfoItemData(string key)
+    public HeroInfoItemData(string key, bool isPercentage = false)
     {
         Key = key;
+        this.isPercentage = isPercentage;
     }
 }

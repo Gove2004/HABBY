@@ -6,6 +6,7 @@ public class ActorBullet : MonoBehaviour, IPoolable
 {
     private bool isPlayerBullet;
     private int damage;
+    private bool isCritical;
     private float lifeTime;
     private int throughCount; // 穿透剩余数，0表示不穿透
 
@@ -36,7 +37,7 @@ public class ActorBullet : MonoBehaviour, IPoolable
             Character enemy = collision.GetComponent<Character>();
             if (enemy != null)
             {
-                enemy.TakeDamageFrom(damage, transform.position);
+                enemy.TakeDamageFrom(damage, transform.position, isCritical);
                 throughCount--;
                 if (throughCount < 0)
                 {
@@ -76,9 +77,10 @@ public class ActorBullet : MonoBehaviour, IPoolable
         return this;
     }
 
-    public ActorBullet SetDamage(int damage)
+    public ActorBullet SetDamage(int damage, bool isCritical = false)
     {
         this.damage = damage;
+        this.isCritical = isCritical;
         return this;
     }
 

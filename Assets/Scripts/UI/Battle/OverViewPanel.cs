@@ -9,6 +9,8 @@ public class OverViewPanel : ViewPanel<OverViewModel>
     {
         base.OnShow(payload);
 
+        TMPTexts["Context"].text = GetFinalContext();
+
         Time.timeScale = 0f; // 暂停游戏
     }
 
@@ -40,5 +42,25 @@ public class OverViewPanel : ViewPanel<OverViewModel>
                 SceneCore.UnloadAsync("Battle");
                 break;
         }
+    }
+
+
+    private string GetFinalContext()
+    {
+        var battleVM = VMContainer.Get<BattleViewModel>();
+        return $"你迷失在黑暗中...\n\n" +
+               $"在刚才的 <color=#00ffff>{FormatTime(battleVM.BattleTime)}</color> 时间里\n" +
+               $"你击败了 <color=red>{battleVM.KillCount}</color> 个敌人\n" +
+               $"升到了 <color=green>{battleVM.playerCharacter.Level}</color> 级\n" +
+               $"最终得分: <color=blue>{battleVM.Score}</color>\n" + 
+               $"获得金币: <color=yellow>{battleVM.Score}</color> 金币";
+    }
+
+
+    private string FormatTime(float time)
+    {
+        int minutes = Mathf.FloorToInt(time / 60);
+        int seconds = Mathf.FloorToInt(time % 60);
+        return $"{minutes:00}:{seconds:00}";
     }
 }

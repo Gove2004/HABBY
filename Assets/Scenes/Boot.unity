@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 490323638}
   - component: {fileID: 490323639}
   - component: {fileID: 490323640}
+  - component: {fileID: 490323641}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -167,8 +168,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActorPrefab: {fileID: 0}
-  WarriorPrefab: {fileID: 0}
-  WizardPrefab: {fileID: 0}
   NormalEnemyPrefab: {fileID: 0}
   ActorBossPrefab: {fileID: 0}
   GodBossPrefab: {fileID: 0}
@@ -212,6 +211,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77281f2828e9d1d4fb2212b6241ec1cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &490323641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 490323634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44c63d457babef9499e5a1ea3af28a3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &519420028

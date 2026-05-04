@@ -8,27 +8,26 @@ public class ActorBoss : Enemy
 	private enum BossState
 	{
 		Approach,
-		Laser,
-		Fan,
+		MultiFan,
 		Rest
 	}
 
 	private BossState currentState;
 	private float stateTimer;
+	private int waveCount = 0;
 
 	private const float ShootDistance = 10f;
 	private const float RetreatDistance = 15f;
 	private const float RestDuration = 2f;
-	private const float LaserBulletSpeed = 5f;
-	private const float FanBulletSpeed = 5f;
+	private const float MultiFanBulletSpeed = 5f;
 
 	public override void Setup(int level)
     {
 		this.level = level;
-        MaxHP = 5 * level;
+        MaxHP = level * level;
         CurrentHP = MaxHP;
         AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 2));
-        DefensePower = Mathf.FloorToInt(level / 2);
+        DefensePower = Mathf.FloorToInt(level / 5);
         MoveSpeed = 1f;
 
 		currentState = BossState.Approach;
@@ -39,6 +38,14 @@ public class ActorBoss : Enemy
         if (hpBar != null) hpBar.SetCharacter(this);
     }
 
+
+	public override void OnRecycle()
+	{
+		base.OnRecycle();
+		currentState = BossState.Approach;
+		stateTimer = 0f;
+		waveCount = 0;
+	}
 
 	protected override void Update()
 	{
@@ -67,28 +74,28 @@ public class ActorBoss : Enemy
 				else
 				{
 					StopMovement();
-					currentState = Random.value < 0.4f ? BossState.Laser : BossState.Fan;
+					currentState = BossState.MultiFan;
 					stateTimer = 0f;
+					waveCount = 0;
 				}
 				break;
 
-			case BossState.Laser:
+			case BossState.MultiFan:
 				StopMovement();
 				if (stateTimer <= 0f)
 				{
-					FireLaser();
-					currentState = BossState.Rest;
-					stateTimer = RestDuration;
-				}
-				break;
-
-			case BossState.Fan:
-				StopMovement();
-				if (stateTimer <= 0f)
-				{
-					FireFan();
-					currentState = BossState.Rest;
-					stateTimer = RestDuration;
+					if (waveCount < 3)
+					{
+						FireMultiFan();
+						waveCount++;
+						stateTimer = 0.25f; // 波次间隔0.5秒
+					}
+					else
+					{
+						waveCount = 0;
+						currentState = BossState.Rest;
+						stateTimer = RestDuration;
+					}
 				}
 				break;
 
@@ -100,22 +107,18 @@ public class ActorBoss : Enemy
 				}
 				else if (stateTimer <= 0f)
 				{
-					currentState = Random.value < 0.4f ? BossState.Laser : BossState.Fan;
+					currentState = BossState.MultiFan;
+					waveCount = 0;
 				}
 				break;
 		}
 	}
 
 
-	private void FireLaser()
+	private void FireMultiFan()
 	{
-		SpawnBullet(3, 30f, 1.6f, 3f, LaserBulletSpeed, 3, 3f);
-	}
-
-
-	private void FireFan()
-	{
-		SpawnBullet(7, 55f, 0.8f, 2.2f, FanBulletSpeed, 0, 1f);
+		// 150度扇形，5颗子弹
+		SpawnBullet(5, 150f, 1f, 3f, MultiFanBulletSpeed, 0, 1.5f);
 	}
 
 

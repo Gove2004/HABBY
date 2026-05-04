@@ -1,5 +1,6 @@
 
 
+using System;
 using GoveKits.Runtime.UI;
 using UnityEngine;
 
@@ -11,19 +12,19 @@ public class LargeBoss : Enemy
 	private float chargeCooldownTimer = 2f;
 	private bool isCharging;
 
-	private const float ChaseDistance = 5f;
-	private const float ChargeCooldown = 5f;
+	private const float ChaseDistance = 10f;
+	private const float ChargeCooldown = 2.5f;
 	private const float ChargeDuration = 0.5f;
-	private const float ChargeSpeedMultiplier = 2f;
-	private const float ChargeChance = 0.5f;
+	private const float ChargeSpeedMultiplier = 5f;
+	private const float ChargeChance = 0.8f;
 
 
 	public override void Setup(int level)
     {
 		this.level = level;
-        MaxHP = 10 * level;
+        MaxHP = level * level;
         CurrentHP = MaxHP;
-        AttackPower = level;
+        AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 2));
         DefensePower = Mathf.FloorToInt(level / 2);
         MoveSpeed = 1f;
 
@@ -33,6 +34,16 @@ public class LargeBoss : Enemy
 
         if (hpBar != null) hpBar.SetCharacter(this);
     }
+
+
+	public override void OnRecycle()
+	{
+		base.OnRecycle();
+		attackTimer = 0f;
+		chargeTimer = 0f;
+		chargeCooldownTimer = 2f;
+		isCharging = false;
+	}
 
 	protected override void Update()
 	{
@@ -77,7 +88,7 @@ public class LargeBoss : Enemy
 
 		if (chargeCooldownTimer <= 0f)
 		{
-			if (Random.value <= ChargeChance)
+			if (UnityEngine.Random.value <= ChargeChance)
 			{
 				isCharging = true;
 				chargeTimer = ChargeDuration;

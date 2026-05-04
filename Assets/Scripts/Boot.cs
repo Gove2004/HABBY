@@ -45,7 +45,18 @@ public class GoveKitsManager : MonoSingleton<GoveKitsManager>
 
         // 正式开启场景加载
         VMContainer.Get<GameViewModel>().Initialize();
-        SceneCore.Load("Home", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        if (!SceneCore.IsSceneLoaded("Home"))
+        {
+            SceneCore.Load("Home", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        }
+        if (SceneCore.IsSceneLoaded("Select"))
+        {
+            SceneCore.UnloadAsync("Select");
+        }
+        if (SceneCore.IsSceneLoaded("Battle"))
+        {
+            SceneCore.UnloadAsync("Battle");
+        }
     }
 
 

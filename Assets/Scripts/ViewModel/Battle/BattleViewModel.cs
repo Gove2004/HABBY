@@ -25,6 +25,8 @@ public class BattleViewModel : ViewModel
 
     public void StartBattle(HeroType heroType, float scoreMultiplier, float difficultyMultiplier, bool isMoreHP, bool isMoreDamage)
     {
+        BattleTime = 0f;
+        Score = 0;
         IsBattleActive = true;
         // 初始化战斗数据
 
@@ -37,11 +39,14 @@ public class BattleViewModel : ViewModel
         BuffManager.Instance.ResetPlayerAvailableBuffs(heroType);
 
         // 系数
-        this.scoreMultiplier = scoreMultiplier;
+        this.ScoreMultiplier = scoreMultiplier;
         this.difficultyMultiplier = difficultyMultiplier;
         // 加成
         this.isMoreHP = isMoreHP;
         this.isMoreDamage = isMoreDamage;
+
+        // 刷新次数
+        RefeshCount = (int)VMContainer.Get<GameViewModel>().GetNowAttribute(HeroType.Actor, PlayerAttributeType.RefreshTime);
     }
 
 
@@ -65,6 +70,8 @@ public class BattleViewModel : ViewModel
         // 清理战斗数据
         BattleTime = 0f;
         Score = 0;
+        KillCount = 0;
+        RefeshCount = 0;
 
         // 重置敌人生成状态
         nextWaveTime = 5f;
@@ -96,6 +103,7 @@ public class BattleViewModel : ViewModel
 
     public Player playerCharacter { get; private set; }
     private List<Character> enemyCharacters = new List<Character>();
+    public int KillCount = 0;
 
     #endregion
 
@@ -103,13 +111,13 @@ public class BattleViewModel : ViewModel
 
     private bool isMoreHP = false;
     private bool isMoreDamage = false;
-    private float scoreMultiplier = 1f; // 分数系数
+    public float ScoreMultiplier = 1f; // 分数系数
     private float difficultyMultiplier = 1f;  // 难度系数
     private int setupLevel = 0;  // 当前敌人等级
 
     private float nextWaveTime = 5f;  // 下一波敌人出现时间, 默认值为第一波
     private float waveInterval = 20f;   // 每波敌人间隔时间
-    private float foreverWaveInterval = 30f; // 超过预设波数后的敌人生成间隔时间
+    private float foreverWaveInterval = 25f; // 超过预设波数后的敌人生成间隔时间
     private float maxWaves = 4 * 6; // 预设的最大波数，超过这个波数后将进入无尽模式
 
     private int currentWave = 0;  // 当前波数
@@ -167,6 +175,7 @@ public class BattleViewModel : ViewModel
         {
             AddScore(enemyCharacter.Level); // 根据敌人当前等级增加分数
             enemyCharacters.Remove(enemyCharacter);
+            KillCount++; // 增加击杀数
         };
     }
 
@@ -195,9 +204,10 @@ public class BattleViewModel : ViewModel
 
     #region Score Management
 
-    public readonly int MaxScore = VMContainer.Get<GameViewModel>().MaxScore;
-    private int score = 0;
-    public int Score
+    public long MaxScore => VMContainer.Get<GameViewModel>().MaxScore;
+    
+    private long score = 0;
+    public long Score
     {
         get => score;
         set => SetProperty(ref score, value);
@@ -206,10 +216,17 @@ public class BattleViewModel : ViewModel
 
     public void AddScore(int baseScore)
     {
-        int finalScore = Mathf.RoundToInt(baseScore * scoreMultiplier);
+        long finalScore = (long)Mathf.Round(baseScore * ScoreMultiplier);
         Score += finalScore;
     }
 
 
     #endregion
+
+    public int RefeshCount = 0;
+    public void ChangeRefreshCount(int amount)
+    {
+        RefeshCount += amount;
+        if (RefeshCount < 0) RefeshCount = 0;
+    }
 }

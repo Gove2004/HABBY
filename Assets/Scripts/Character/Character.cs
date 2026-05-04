@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using DG.Tweening;
+using GoveKits.Runtime.Core;
 using UnityEngine;
 
-public abstract class Character : MonoBehaviour
+public abstract class Character : MonoBehaviour, IPoolable
 {
     // Level Component Fields
     protected int level;
@@ -35,11 +36,14 @@ public abstract class Character : MonoBehaviour
 
     protected SpriteRenderer sr;
     protected HPBar hpBar;
+    protected Color baseColor = Color.white;
+    private Tween colorTween;
 
     protected virtual void Awake()
     {
         sr = GetComponentInChildren<SpriteRenderer>();
         if (sr == null) sr = GetComponent<SpriteRenderer>();
+        if (sr != null) baseColor = sr.color;
         hpBar = GetComponentInChildren<HPBar>();
         
     }
@@ -50,10 +54,10 @@ public abstract class Character : MonoBehaviour
     {
     }
 
-    public virtual void TakeDamageFrom(int damage, Vector2 fromPosition)
+    public virtual void TakeDamageFrom(int damage, Vector2 fromPosition, bool isCritical = false)
     {
         int actualDamage = Mathf.Max(damage - DefensePower, 0);
-        TakeDamage(actualDamage);
+        TakeDamage(actualDamage, isCritical);
         
         // Knockback
         Vector2 knockbackDirection = (transform.position - (Vector3)fromPosition).normalized;
@@ -72,9 +76,10 @@ public abstract class Character : MonoBehaviour
         
         if (sr != null)
         {
-            // 闪红
-            Color originalColor = sr.color;
-            sr.DOColor(Color.red, 0.1f).OnComplete(() => sr.DOColor(originalColor, 0.1f));
+            // 闪红前停止旧的补间并重置颜色
+            colorTween?.Kill();
+            sr.color = baseColor;
+            colorTween = sr.DOColor(Color.red, 0.1f).SetLoops(2, LoopType.Yoyo);
         }
 
         if (isCritical)
@@ -99,13 +104,31 @@ public abstract class Character : MonoBehaviour
 
         if (sr != null)
         {
-            // 闪绿
-            Color originalColor = sr.color;
-            sr.DOColor(Color.green, 0.1f).OnComplete(() => sr.DOColor(originalColor, 0.1f));
+            // 闪绿前停止旧的补间并重置颜色
+            colorTween?.Kill();
+            sr.color = baseColor;
+            colorTween = sr.DOColor(Color.green, 0.1f).SetLoops(2, LoopType.Yoyo);
         }
 
         // 显示治疗文本
         FloatTextManager.Instance.Show(amount.ToString(), transform.position, Color.green);
     }
+
+    public virtual void OnRecycle()
+    {
+        // 重置HP
+        CurrentHP = MaxHP;
+        OnHPChanged?.Invoke(CurrentHP);
+        
+        // 重置颜色
+        if (sr != null)
+        {
+            colorTween?.Kill();
+            sr.color = baseColor;
+        }
+
+        // 其他重置逻辑（如Buff等）可以在子类中实现
+    }
+
 }
 

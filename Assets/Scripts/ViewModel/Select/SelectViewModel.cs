@@ -39,6 +39,11 @@ public class SelectViewModel : ViewModel
         SceneCore.UnloadAsync("Select");
 
         VMContainer.Get<BattleViewModel>().StartBattle(SelectedHero, ScoreMultiplier, difficultyMultiplier, isMoreHP, isMoreDamage);
+        // 清理当前选中态
+        ScoreMultiplier = 1f;
+        difficultyMultiplier = 1f;
+        isMoreHP = false;
+        isMoreDamage = false;
     }
 
     public void BackToMainMenu()
@@ -52,12 +57,28 @@ public class SelectViewModel : ViewModel
     {
         return new HeroInfoItemData[]
         {
-            new HeroInfoItemData("生命"),
-            new HeroInfoItemData("攻击"),
-            new HeroInfoItemData("防御"),
-            new HeroInfoItemData("暴击"),
-            new HeroInfoItemData("暴伤"),
-            new HeroInfoItemData("攻速"),
+            new HeroInfoItemData(PlayerAttributeType.MaxHP),
+            new HeroInfoItemData(PlayerAttributeType.AttackPower),
+            new HeroInfoItemData(PlayerAttributeType.DefensePower),
+            new HeroInfoItemData(PlayerAttributeType.CritRate, true),
+            new HeroInfoItemData(PlayerAttributeType.CritDamageMultiplier, true),
+            new HeroInfoItemData(PlayerAttributeType.MoveSpeed, true),
+            new HeroInfoItemData(PlayerAttributeType.AttackSpeed, true),
+
+            new HeroInfoItemData(PlayerAttributeType.BulletSpeed, true),
+            new HeroInfoItemData(PlayerAttributeType.BulletSize, true),
+            new HeroInfoItemData(PlayerAttributeType.BulletLife, true),
+            new HeroInfoItemData(PlayerAttributeType.BulletCount),
+            new HeroInfoItemData(PlayerAttributeType.BulletPierce),
+
+            new HeroInfoItemData(PlayerAttributeType.ExpRate, true),
+            new HeroInfoItemData(PlayerAttributeType.GoldRate, true),
+            new HeroInfoItemData(PlayerAttributeType.RefreshTime),
+            new HeroInfoItemData(PlayerAttributeType.HealPerFives),
+
+            new HeroInfoItemData(PlayerAttributeType.MoreHPFurits),
+            new HeroInfoItemData(PlayerAttributeType.MoreATKFurits),
+            new HeroInfoItemData(PlayerAttributeType.MoreDEFFurits),
         };
     }
 

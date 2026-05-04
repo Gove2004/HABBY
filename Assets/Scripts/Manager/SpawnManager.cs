@@ -5,8 +5,8 @@ public class SpawnManager : MonoSingleton<SpawnManager>
 {
     [Header("Character Prefabs")]
     public GameObject ActorPrefab;
-    public GameObject WarriorPrefab;
-    public GameObject WizardPrefab;
+    // public GameObject WarriorPrefab;
+    // public GameObject WizardPrefab;
 
     [Header("Enemy Prefabs")]
     public GameObject NormalEnemyPrefab;
@@ -28,8 +28,8 @@ public class SpawnManager : MonoSingleton<SpawnManager>
         base.Init();
 
         ActorPrefab = Resources.Load<GameObject>("Prefabs/Character/Actor");
-        WarriorPrefab = Resources.Load<GameObject>("Prefabs/Character/Warrior");
-        WizardPrefab = Resources.Load<GameObject>("Prefabs/Character/Wizard");
+        // WarriorPrefab = Resources.Load<GameObject>("Prefabs/Character/Warrior");
+        // WizardPrefab = Resources.Load<GameObject>("Prefabs/Character/Wizard");
 
         NormalEnemyPrefab = Resources.Load<GameObject>("Prefabs/Enemy/NormalEnemy");
         ActorBossPrefab = Resources.Load<GameObject>("Prefabs/Enemy/ActorBoss");
@@ -51,10 +51,10 @@ public class SpawnManager : MonoSingleton<SpawnManager>
         {
             case HeroType.Actor:
                 return ActorPrefab;
-            case HeroType.Warrior:
-                return WarriorPrefab;
-            case HeroType.Wizard:
-                return WizardPrefab;
+            // case HeroType.Warrior:
+            //     return WarriorPrefab;
+            // case HeroType.Wizard:
+            //     return WizardPrefab;
             default:
                 LogCore.Error(nameof(SpawnManager), $"Unknown HeroType: {heroType}");
                 return null;

@@ -9,11 +9,14 @@ public class GameViewModel : ViewModel
 
     public void Initialize()
     {
-        MaxScore = PrefsCore.GetInt(MaxScoreKey, 0);
-        NowScore = PrefsCore.GetInt(NowScoreKey, 0);
+        long.TryParse(PrefsCore.GetString(MaxScoreKey, "0"), out long maxScore);
+        MaxScore = maxScore;
 
-        NowScore = 1000;  // 测试用，正式发布前请删除
-        LogCore.Log($"注入测试数据: NowScore = {NowScore}");
+        long.TryParse(PrefsCore.GetString(NowScoreKey, "0"), out long nowScore);
+        NowScore = nowScore;
+
+        // NowScore = 1000;  // 测试用，正式发布前请删除
+        // LogCore.Log($"注入测试数据: NowScore = {NowScore}");
     }
 
     public void ExitGame()
@@ -34,27 +37,27 @@ public class GameViewModel : ViewModel
     
     public const string MaxScoreKey = "MaxScore";
     public const string NowScoreKey = "NowScore";
-    public int MaxScore { get; private set; }
-    public int NowScore { get; private set; }
+    public long MaxScore { get; private set; }
+    public long NowScore { get; private set; }
     
-    public void UpdateMaxScore(int score)
+    public void UpdateMaxScore(long score)
     {
         NowScore += score;
-        PrefsCore.SetInt(NowScoreKey, NowScore);
+        PrefsCore.SetString(NowScoreKey, NowScore.ToString());
         if (score > MaxScore)
         {
             MaxScore = score;
-            PrefsCore.SetInt(MaxScoreKey, MaxScore);
+            PrefsCore.SetString(MaxScoreKey, MaxScore.ToString());
         }
         PrefsCore.Save();
     }
 
-    public bool TrySpendcore(int score)
+    public bool TrySpendcore(long score)
     {
         if (NowScore >= score)
         {
             NowScore -= score;
-            PrefsCore.SetInt(NowScoreKey, NowScore);
+            PrefsCore.SetString(NowScoreKey, NowScore.ToString());
             PrefsCore.Save();
             return true;
         }
@@ -73,7 +76,7 @@ public class GameViewModel : ViewModel
         return HeroInfoConfig.ActorInfo[attribute][level].value;
     }
 
-    public int GetNowPrice(HeroType heroType, string attribute)
+    public long GetNowPrice(HeroType heroType, string attribute)
     {
         int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
         return HeroInfoConfig.ActorInfo[attribute][level].price;
@@ -84,7 +87,7 @@ public class GameViewModel : ViewModel
         int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
         if (level >= HeroInfoConfig.ActorInfo[attribute].Count - 1)
             return false;
-        int price = HeroInfoConfig.ActorInfo[attribute][level].price;
+        long price = HeroInfoConfig.ActorInfo[attribute][level].price;
         return NowScore >= price;
     }
 
@@ -94,7 +97,7 @@ public class GameViewModel : ViewModel
             return;
 
         int level = PrefsCore.GetInt($"{heroType}_{attribute}_Level", 0);
-        int price = HeroInfoConfig.ActorInfo[attribute][level].price;
+        long price = HeroInfoConfig.ActorInfo[attribute][level].price;
         if (TrySpendcore(price))
         {
             PrefsCore.SetInt($"{heroType}_{attribute}_Level", level + 1);

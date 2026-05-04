@@ -15,8 +15,8 @@ public class BufferEnemy : Enemy
         MaxHP = level;
         CurrentHP = MaxHP;
         AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 3));
-        DefensePower = Mathf.FloorToInt(level / 2);
-        MoveSpeed = 2f;
+        DefensePower = Mathf.FloorToInt(level / 3);
+        MoveSpeed = 3f;
 
 		buffTimer = Random.Range(0f, BuffInterval);
         player = VMContainer.Get<BattleViewModel>().playerCharacter;
@@ -25,6 +25,13 @@ public class BufferEnemy : Enemy
 
         if (hpBar != null) hpBar.SetCharacter(this);
     }
+
+
+	public override void OnRecycle()
+	{
+		base.OnRecycle();
+		buffTimer = Random.Range(0f, BuffInterval);
+	}
 
 	protected override void Update()
 	{
@@ -78,6 +85,6 @@ public class BufferEnemy : Enemy
 
 		// pick one random enemy on the field
 		int idx = Random.Range(0, candidates.Count);
-		buff.Apply(candidates[idx]);
+		buff.Apply(candidates[idx], CurrentAttackPower);
 	}
 }

@@ -14,11 +14,11 @@ public class GodBoss : Enemy
     public override void Setup(int level)
     {
 		this.level = level;
-        MaxHP = level;
+        MaxHP = level * level;
         CurrentHP = MaxHP;
         AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 3));
-        DefensePower = Mathf.FloorToInt(level / 2);
-        MoveSpeed = 2f;
+        DefensePower = Mathf.FloorToInt(level / 3);
+        MoveSpeed = 4f;
 
 		buffTimer = Random.Range(0f, BuffInterval);
         player = VMContainer.Get<BattleViewModel>().playerCharacter;
@@ -27,6 +27,13 @@ public class GodBoss : Enemy
 
         if (hpBar != null) hpBar.SetCharacter(this);
     }
+
+
+	public override void OnRecycle()
+	{
+		base.OnRecycle();
+		buffTimer = Random.Range(0f, BuffInterval);
+	}
 
 	protected override void Update()
 	{
@@ -90,9 +97,9 @@ public class GodBoss : Enemy
 			BaseBuff speedBuff = BuffManager.Instance.GetEnemyBuff();
 			BaseBuff sustainBuff = BuffManager.Instance.GetEnemyBuff();
 
-			attackBuff?.Apply(enemy);
-			speedBuff?.Apply(enemy);
-			sustainBuff?.Apply(enemy);
+			attackBuff?.Apply(enemy, CurrentAttackPower);
+			speedBuff?.Apply(enemy, CurrentAttackPower);
+			sustainBuff?.Apply(enemy, CurrentAttackPower);
 
 			enemy.Heal(Mathf.Max(1, Level / 2));
 		}

@@ -9,6 +9,9 @@ public class PauseViewPanel : ViewPanel<PauseViewModel>
     {
         base.OnShow(payload);
 
+        TMPTexts["Player"].text = ViewModel.GetPlayerInfo();
+        TMPTexts["Buff"].text = ViewModel.GetBuffInfo();
+        TMPTexts["Level"].text = ViewModel.GetLevelInfo();
         Time.timeScale = 0f; // 暂停游戏
     }
 

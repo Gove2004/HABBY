@@ -34,6 +34,22 @@ public abstract class Enemy : Character
     }
 
 
+    public override void OnRecycle()
+    {
+        base.OnRecycle();
+        
+        timedStatModifiers.Clear();
+        attackPowerMultiplier = 1f;
+        moveSpeedMultiplier = 1f;
+        healPerSecond = 0f;
+        healAccumulator = 0f;
+        BuffCounters.Clear();
+        
+        StopMovement();
+        OnDeath -= MyDestroy;
+    }
+
+
     public void SetBoost(bool isMoreHP, bool isMoreDamage)
     {
         if (isMoreHP)

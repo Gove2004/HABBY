@@ -9,8 +9,11 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
     {
         base.OnShow(payload);
 
-        TMPTexts["MaxScore"].text = $"单局最高得分: {VMContainer.Get<GameViewModel>().MaxScore}  ";
-        TMPTexts["NowScore"].text = $"剩余可用金币: {VMContainer.Get<GameViewModel>().NowScore}  ";
+        TMPTexts["MaxScore"].text = $"最高记录: {VMContainer.Get<GameViewModel>().MaxScore}  ";
+        TMPTexts["NowScore"].text = $"金币: {VMContainer.Get<GameViewModel>().NowScore}  ";
+        
+        // 复位摄像机
+        Camera.main.transform.position = new Vector3(0, 0, -10);
     }
 
 

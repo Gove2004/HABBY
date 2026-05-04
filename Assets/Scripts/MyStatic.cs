@@ -6,7 +6,7 @@ public static class MyStatic
     // 获取经验
     public static int GetExpThresholdForLevel(int nextLevel)
     {
-        return nextLevel * 2 - 1;
+        return nextLevel * nextLevel;
     }
 
     // 生成正方形纹理
@@ -55,13 +55,19 @@ public static class MyStatic
     public static Sprite GenerateTriangleTexture(int size, Color color)
     {
         Texture2D texture = new Texture2D(size, size);
+        texture.filterMode = FilterMode.Point;
+        texture.wrapMode = TextureWrapMode.Clamp;
         Color[] pixels = new Color[size * size];
+        float centerX = (size - 1) / 2f;
+        float maxHalfWidth = centerX;
         for (int y = 0; y < size; y++)
         {
+            float t = size <= 1 ? 1f : y / (size - 1f);
+            float halfWidth = Mathf.Lerp(0f, maxHalfWidth, t);
             for (int x = 0; x < size; x++)
             {
                 int index = y * size + x;
-                if (x >= size / 2 - y && x <= size / 2 + y)
+                if (Mathf.Abs(x - centerX) <= halfWidth)
                 {
                     pixels[index] = color;
                 }

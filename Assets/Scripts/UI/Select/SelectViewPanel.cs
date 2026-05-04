@@ -53,7 +53,10 @@ public class SelectViewPanel : ViewPanel<SelectViewModel>
                 break;
         }
         HeroInfoItemData[] heroInfoItems = ViewModel.GetHeroInfoItems();
-        heroInfoItemContainer.DetachChildren();
+        foreach (Transform child in heroInfoItemContainer)
+        {
+            Destroy(child.gameObject);
+        }
         for (int i = 0; i < heroInfoItems.Length; i++)
         {
             GameObject item = Instantiate(heroInfoItemPrefab, heroInfoItemContainer);
@@ -103,8 +106,6 @@ public class SelectViewPanel : ViewPanel<SelectViewModel>
 
     protected override void OnToggleChanged(string togName, bool val)
     {
-        float scoreMultiplier = ViewModel.ScoreMultiplier;
-        float multiplier = ViewModel.difficultyMultiplier;
         switch (togName)
         {
             case "0.5":
@@ -129,7 +130,7 @@ public class SelectViewPanel : ViewPanel<SelectViewModel>
                 ViewModel.UpdateMultiplier(0.1f, val);
                 break;
             case "T":
-                ViewModel.UpdateMultiplier(10f, val);
+                ViewModel.UpdateMultiplier(5f, val);
                 break;
         }
     }

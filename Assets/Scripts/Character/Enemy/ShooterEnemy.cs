@@ -29,8 +29,8 @@ public class ShooterEnemy : Enemy
 		this.level = level;
         MaxHP = level;
         CurrentHP = MaxHP;
-        AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 3));
-        DefensePower = Mathf.FloorToInt(level / 2);
+        AttackPower = Mathf.Max(1, Mathf.RoundToInt(level / 2));
+        DefensePower = Mathf.FloorToInt(level / 5);
         MoveSpeed = 2f;
 
 		currentState = ShooterState.Approach;
@@ -40,6 +40,14 @@ public class ShooterEnemy : Enemy
 
         if (hpBar != null) hpBar.SetCharacter(this);
     }
+
+
+	public override void OnRecycle()
+	{
+		base.OnRecycle();
+		currentState = ShooterState.Approach;
+		stateTimer = 0f;
+	}
 
 	protected override void Update()
 	{

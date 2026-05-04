@@ -13,6 +13,9 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
 
         ViewModel.playerCharacter.OnExpChanged += (v) => OnPlayerLevelExpChanged(false);
         ViewModel.playerCharacter.OnLevelUp += (v) => OnPlayerLevelExpChanged(true);
+
+        TMPTexts["Score"].text = $"得分: {ViewModel.Score}";
+        TMPTexts["MaxScore"].text = $"最高分: {ViewModel.MaxScore}";
     }
 
     public override void OnHide()
@@ -32,7 +35,7 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
                 TMPTexts["MaxScore"].text = $"最高分: {ViewModel.MaxScore}";
                 break;
             case nameof(ViewModel.IsBattleActive):
-                if (!ViewModel.IsBattleActive)
+                if (!ViewModel.IsBattleActive)  // 战斗结束，显示结算界面
                 {
                     Controller.Show<OverViewPanel>();
                 }

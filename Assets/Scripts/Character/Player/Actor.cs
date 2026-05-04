@@ -1,4 +1,5 @@
 using GoveKits.Runtime.Core;
+using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class Actor : Player
@@ -51,19 +52,24 @@ public class Actor : Player
         exp = 0;
         nextLevelExpThreshold = MyStatic.GetExpThresholdForLevel(level);
         
-        MaxHP = 10 * level;
+        GameViewModel gameViewModel = VMContainer.Get<GameViewModel>();
+        ExpRateMultiplier = (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.ExpRate);
+        HealPerFiveSeconds = (int)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.HealPerFives);
+
+        MaxHP = (int)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.MaxHP);
         CurrentHP = MaxHP;
-        AttackPower = level;
-        DefensePower = Mathf.FloorToInt(level / 2);
-        MoveSpeed = 2.5f;
+        AttackPower = (int)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.AttackPower);
+        DefensePower = (int)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.DefensePower);
+        AttackSpeed = (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.AttackSpeed);
+        CritRate = (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.CritRate);
+        CritDamageMultiplier = (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.CritDamageMultiplier);
 
-        CritRate = 0.0f;
-        CritDamageMultiplier = 2.0f;
-
-        AttackSpeed = 1.0f;
-        BulletSpeed = 10.0f;
-        BulletSize = 1.0f;
-        BulletLifeTime = 2.0f;
+        MoveSpeed = 2f * (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.MoveSpeed);
+        BulletFireCount = (int)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.BulletCount);
+        BulletThroughCount = (int)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.BulletPierce);
+        BulletSpeed = 10.0f * (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.BulletSpeed);
+        BulletSize = 1.0f * (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.BulletSize);
+        BulletLifeTime = 1.0f * (float)gameViewModel.GetNowAttribute(HeroType.Actor, PlayerAttributeType.BulletLife);
 
         if (hpBar != null) hpBar.SetCharacter(this);
     }
@@ -91,8 +97,11 @@ public class Actor : Player
         
         for (int i = 0; i < BulletFireCount; i++)
         {
+            bool isCritical = Random.value < CritRate;
+            int damage = isCritical ? Mathf.RoundToInt(AttackPower * CritDamageMultiplier) : AttackPower;
+
             ActorBullet bullet = PoolCore.Get(bulletObj).GetComponent<ActorBullet>();
-            bullet.SetPlayerBullet().SetDamage(AttackPower);
+            bullet.SetPlayerBullet().SetDamage(damage, isCritical);
             bullet.SetLifeTime(BulletLifeTime);
             bullet.SetSize(BulletSize);
             bullet.SetThroughCount(BulletThroughCount);

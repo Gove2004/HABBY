@@ -12,6 +12,7 @@ public class ChooseViewPanel : ViewPanel<ChooseViewModel>
 
         Refresh();
 
+
         Time.timeScale = 0f; // 暂停游戏
     }
 
@@ -44,7 +45,7 @@ public class ChooseViewPanel : ViewPanel<ChooseViewModel>
                 onChoose(3);
                 break;
             case "Refresh":
-                Refresh();
+                Refresh(false);
                 break;
 
         }
@@ -58,8 +59,16 @@ public class ChooseViewPanel : ViewPanel<ChooseViewModel>
     }
 
 
-    private void Refresh()
+    private void Refresh(bool isFree = true)
     {
+        if (!isFree)
+        {
+            if (VMContainer.Get<BattleViewModel>().RefeshCount <= 0)
+            {
+                return;
+            }
+            VMContainer.Get<BattleViewModel>().ChangeRefreshCount(-1);
+        }
         ViewModel.Refresh();
 
         TMPTexts["1Name"].text = ViewModel.chooseBuff1.Name;
@@ -68,5 +77,7 @@ public class ChooseViewPanel : ViewPanel<ChooseViewModel>
         TMPTexts["2Description"].text = ViewModel.chooseBuff2.Description;
         TMPTexts["3Name"].text = ViewModel.chooseBuff3.Name;
         TMPTexts["3Description"].text = ViewModel.chooseBuff3.Description;
+
+        TMPTexts["RefreshCost"].text = $"刷新（{VMContainer.Get<BattleViewModel>().RefeshCount}）";
     }
 }
