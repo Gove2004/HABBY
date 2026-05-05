@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel;
+using DG.Tweening;
 using GoveKits.Runtime.Core;
 using GoveKits.Runtime.UI;
 using UnityEngine;
@@ -13,8 +15,14 @@ public class PauseViewPanel : ViewPanel<PauseViewModel>
         TMPTexts["Buff"].text = ViewModel.GetBuffInfo();
         TMPTexts["Level"].text = ViewModel.GetLevelInfo();
         Time.timeScale = 0f; // 暂停游戏
+
+        ShowAnimation();
     }
 
+    private void ShowAnimation()
+    {
+        transform.DOScale(Vector3.one, 0.5f).From(Vector3.zero).SetEase(Ease.OutBack).SetUpdate(true);
+    }
 
     public override void OnHide()
     {
@@ -37,9 +45,13 @@ public class PauseViewPanel : ViewPanel<PauseViewModel>
         switch (btnName)
         {
             case "Resume":
+                AudioManager.Instance.PlayUIClick();
+                
                 Controller.HidePopup<PauseViewPanel>();
                 break;
             case "Quit":
+                AudioManager.Instance.PlayUIClick();
+
                 Controller.HidePopup<PauseViewPanel>();
                 VMContainer.Get<BattleViewModel>().ClearBattle();
 

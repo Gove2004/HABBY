@@ -1,12 +1,16 @@
 
 
 using System.ComponentModel;
+using DG.Tweening;
 using GoveKits.Runtime.Core;
 using GoveKits.Runtime.UI;
 using UnityEngine;
 
 public class BattleViewPanel : ViewPanel<BattleViewModel>
 {
+    public CanvasGroup TipCanvasGroup;
+
+
     public override void OnShow(object payload = null)
     {
         base.OnShow(payload);
@@ -14,8 +18,29 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
         ViewModel.playerCharacter.OnExpChanged += (v) => OnPlayerLevelExpChanged(false);
         ViewModel.playerCharacter.OnLevelUp += (v) => OnPlayerLevelExpChanged(true);
 
-        TMPTexts["Score"].text = $"得分: {ViewModel.Score}";
-        TMPTexts["MaxScore"].text = $"最高分: {ViewModel.MaxScore}";
+        UpdateTMPAnimation();
+
+        AudioManager.Instance.PlayBattleBGM();
+
+        CameraManager.Instance.StartBattleCameraEffect();
+
+        // 显示提示文本，并在5秒后淡出
+        TipCanvasGroup.gameObject.SetActive(true);
+        TipCanvasGroup.DOFade(0f, 5f).From(1f).SetEase(Ease.OutQuad).SetUpdate(true).OnComplete(() => {
+            TipCanvasGroup.gameObject.SetActive(false);
+        });
+    }
+    
+    private long lastScore = -1;
+    private void UpdateTMPAnimation()
+    {
+        long nowScore = ViewModel.Score;
+        if (lastScore != nowScore)
+        {
+            TMPTexts["Score"].GetComponent<RollTMP>().RollTMPText("得分: ", lastScore, nowScore, 1f);
+            lastScore = nowScore;
+        }
+        TMPTexts["MaxScore"].text = $"最高纪录: {ViewModel.MaxScore}";
     }
 
     public override void OnHide()
@@ -31,8 +56,7 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
                 TMPTexts["BattleTime"].text = $"{FormatTime(ViewModel.BattleTime)}";
                 break;
             case nameof(ViewModel.Score):
-                TMPTexts["Score"].text = $"得分: {ViewModel.Score}";
-                TMPTexts["MaxScore"].text = $"最高分: {ViewModel.MaxScore}";
+                UpdateTMPAnimation();
                 break;
             case nameof(ViewModel.IsBattleActive):
                 if (!ViewModel.IsBattleActive)  // 战斗结束，显示结算界面
@@ -57,6 +81,7 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
         switch (btnName)
         {
             case "Pause":
+                AudioManager.Instance.PlayUIClick();
                 Controller.Show<PauseViewPanel>();
                 break;
         }
@@ -81,12 +106,8 @@ public class BattleViewPanel : ViewPanel<BattleViewModel>
 
             Controller.Show<ChooseViewPanel>();
         }
-        else
-        {
-            TMPTexts["Exp"].text = $"{ViewModel.playerCharacter.Exp } / {ViewModel.playerCharacter.NextLevelExpThreshold} EXP";
-            Images["LevelExpBar"].fillAmount = ViewModel.playerCharacter.ExpProgress;
-        }
-        
+        TMPTexts["Exp"].text = $"{ViewModel.playerCharacter.Exp } / {ViewModel.playerCharacter.NextLevelExpThreshold} EXP";
+        Images["LevelExpBar"].fillAmount = ViewModel.playerCharacter.ExpProgress;
     }
 
 

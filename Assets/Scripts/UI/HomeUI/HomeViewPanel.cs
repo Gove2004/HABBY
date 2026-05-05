@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using GoveKits.Runtime.Core;
+using GoveKits.Runtime.Storage;
 using GoveKits.Runtime.UI;
 using UnityEngine;
 
@@ -9,15 +10,25 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
     {
         base.OnShow(payload);
 
-        TMPTexts["MaxScore"].text = $"最高记录: {VMContainer.Get<GameViewModel>().MaxScore}  ";
-        TMPTexts["NowScore"].text = $"金币: {VMContainer.Get<GameViewModel>().NowScore}  ";
         
         // 复位摄像机
-        Camera.main.transform.position = new Vector3(0, 0, -10);
+        CameraManager.Instance.Reset();
+
+        // 将 BGM 音量设置为0.5
+        AudioCore.SetVolume(AudioChannel.BGM, 0.5f);
+
+        AudioManager.Instance.PlayMainBGM();
+
+        PlayShowAnimation();
     }
 
 
+    private void PlayShowAnimation()
+    {
+        TMPTexts["MaxScore"].GetComponent<RollTMP>().RollTMPText("最高纪录: ", 0, int.Parse(VMContainer.Get<GameViewModel>().MaxScore.ToString()), 5f);
+        TMPTexts["NowScore"].GetComponent<RollTMP>().RollTMPText("金币: ", 0, int.Parse(VMContainer.Get<GameViewModel>().NowScore.ToString()), 5f);
 
+    }
 
 
 
@@ -32,15 +43,19 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
         switch (btnName)
         {
             case "Start":
+                AudioManager.Instance.PlayUIClick();
                 OnStartBtnClicked();
                 break;
             case "Book":
+                AudioManager.Instance.PlayUIClick();
                 OnBookBtnClicked();
                 break;
-            case "Setting":
-                OnSettingBtnClicked();
-                break;
+            // case "Setting":
+            //     AudioManager.Instance.PlayUIClick();
+            //     OnSettingBtnClicked();
+            //     break;
             case "Exit":
+                AudioManager.Instance.PlayUIClick();
                 OnExitBtnClicked();
                 break;
         }
@@ -57,10 +72,10 @@ public class HomeViewPanel : ViewPanel<HomeViewModel>
         Controller.Show<BookViewPanel>();
     }
     
-    private void OnSettingBtnClicked()
-    {
-        LogCore.Log("Setting Btn Clicked");
-    }
+    // private void OnSettingBtnClicked()
+    // {
+    //     LogCore.Log("Setting Btn Clicked");
+    // }
 
     private void OnExitBtnClicked()
     {

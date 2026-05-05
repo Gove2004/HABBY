@@ -1,6 +1,8 @@
 
 
 
+using System;
+using DG.Tweening;
 using GoveKits.Runtime.UI;
 using UnityEngine;
 
@@ -11,18 +13,31 @@ public class ChooseViewPanel : ViewPanel<ChooseViewModel>
         base.OnShow(payload);
 
         Refresh();
+        AudioManager.Instance.PlayLevelUp();
 
-
+        ShowAnimation();
         Time.timeScale = 0f; // 暂停游戏
     }
 
+    private void ShowAnimation()
+    {
+        transform.DOScale(Vector3.one, 0.5f).From(Vector3.zero).SetEase(Ease.OutBack).SetUpdate(true);
+    }
 
     public override void OnHide()
     {
-        base.OnHide();
-
-        Time.timeScale = 1f; // 恢复游戏
+        HideAnimation(base.OnHide);
     }
+
+    private void HideAnimation(Action onComplete)
+    {
+        // 向左侧飞出
+        transform.DOScale(Vector3.zero, 0.5f).From(Vector3.one).SetEase(Ease.InBack).SetUpdate(true).OnComplete(() => {
+            onComplete?.Invoke();
+            Time.timeScale = 1f; // 恢复游戏
+        });
+    }
+
 
 
 
@@ -36,15 +51,19 @@ public class ChooseViewPanel : ViewPanel<ChooseViewModel>
         switch (btnName)
         {
             case "1":
+                AudioManager.Instance.PlaySelect();
                 onChoose(1);
                 break;
             case "2":
+                AudioManager.Instance.PlaySelect();
                 onChoose(2);
                 break;
             case "3":
+                AudioManager.Instance.PlaySelect();
                 onChoose(3);
                 break;
             case "Refresh":
+                AudioManager.Instance.PlayLevelUp();
                 Refresh(false);
                 break;
 

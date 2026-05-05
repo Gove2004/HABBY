@@ -118,7 +118,7 @@ public class ActorBoss : Enemy
 	private void FireMultiFan()
 	{
 		// 150度扇形，5颗子弹
-		SpawnBullet(5, 150f, 1f, 3f, MultiFanBulletSpeed, 0, 1.5f);
+		SpawnBullet(7, 120f, 1f, 10f, MultiFanBulletSpeed, 0, 1.5f);
 	}
 
 
@@ -148,7 +148,8 @@ public class ActorBoss : Enemy
 				.SetLifeTime(lifeTime)
 				.SetSize(size)
 				.SetThroughCount(throughCount)
-				.SetMotion(transform.position, direction, speed);
+				.SetMotion(transform.position, direction, speed)
+				.SetColor(Color.red); // Boss子弹颜色为红色
 		}
 	}
 }

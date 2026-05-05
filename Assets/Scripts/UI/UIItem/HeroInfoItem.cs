@@ -28,6 +28,8 @@ public class HeroInfoItem : MonoBehaviour
         buyBtn.onClick.AddListener(
             () =>
             {
+                AudioManager.Instance.PlayUIUpgrade();
+                
                 VMContainer.Get<GameViewModel>().UpgradeAttribute(HeroType.Actor, data.Key);
                 OnClick?.Invoke();  // 触发点击事件，通知外部刷新显示
             }

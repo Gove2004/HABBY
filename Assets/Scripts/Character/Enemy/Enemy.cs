@@ -67,19 +67,28 @@ public abstract class Enemy : Character
 
     protected virtual void MyDestroy()
     {
-        // 生成等同于 自身等级的经验球
+        // 将总经验划分为 3~5 个经验球掉落（保证前期有爆率爽感，后期也不会因为太多模型而卡顿）
         GameObject gameObject = SpawnManager.Instance.GetExpBallPrefab();
-        int exp = Level;
+        int totalExp = Level;
 
-        while (exp > 0)
+        if (totalExp > 0)
         {
-            GameObject expBallInstance = PoolCore.Get(gameObject);
-            expBallInstance.transform.position = transform.position;
-            ExpBall expBall = expBallInstance.GetComponent<ExpBall>();
-            
-            int cost = Mathf.Min(exp, 10); // 每个经验球最多10点经验
-            expBall.Setup(cost);
-            exp -= cost;
+            int ballCount = Mathf.Min(totalExp, Random.Range(3, 6)); // 数量限制 3 到 5 个（若总经验不足则以实际经验为准）
+            int baseExp = totalExp / ballCount;
+            int remainder = totalExp % ballCount;
+
+            for (int i = 0; i < ballCount; i++)
+            {
+                GameObject expBallInstance = PoolCore.Get(gameObject);
+                
+                // 给经验球稍微增加一点随机的散落偏移，防止完全重叠在一起看不出来
+                Vector2 randomOffset = Random.insideUnitCircle * 0.5f;
+                expBallInstance.transform.position = (Vector2)transform.position + randomOffset;
+                
+                ExpBall expBall = expBallInstance.GetComponent<ExpBall>();
+                int expForThisBall = baseExp + (i < remainder ? 1 : 0);
+                expBall.Setup(expForThisBall);
+            }
         }
 
         PoolCore.Return(this.gameObject);
@@ -132,11 +141,15 @@ public abstract class Enemy : Character
     }
 
 
-    public void ApplyTimedStatModifier(float attackPowerBonusMultiplier, float moveSpeedBonusMultiplier, float healPerSecondBonus, float duration)
+    private float defensePowerBonus = 0f;
+    public override int GetDefensePower() => Mathf.FloorToInt(DefensePower + defensePowerBonus);
+
+    public void ApplyTimedStatModifier(float attackPowerBonusMultiplier, float moveSpeedBonusMultiplier, float healPerSecondBonus, float defensePowerBonus, float duration)
     {
         attackPowerMultiplier += attackPowerBonusMultiplier;
         moveSpeedMultiplier += moveSpeedBonusMultiplier;
         healPerSecond += healPerSecondBonus;
+        this.defensePowerBonus += defensePowerBonus;
 
         if (duration <= 0f)
         {
@@ -148,6 +161,7 @@ public abstract class Enemy : Character
             AttackPowerBonusMultiplier = attackPowerBonusMultiplier,
             MoveSpeedBonusMultiplier = moveSpeedBonusMultiplier,
             HealPerSecondBonus = healPerSecondBonus,
+            DefensePowerBonus = defensePowerBonus,
             RemainingTime = duration
         });
     }
@@ -181,6 +195,7 @@ public abstract class Enemy : Character
             attackPowerMultiplier -= modifier.AttackPowerBonusMultiplier;
             moveSpeedMultiplier -= modifier.MoveSpeedBonusMultiplier;
             healPerSecond -= modifier.HealPerSecondBonus;
+            this.defensePowerBonus -= modifier.DefensePowerBonus;
             timedStatModifiers.RemoveAt(i);
         }
     }
@@ -191,6 +206,7 @@ public abstract class Enemy : Character
         public float AttackPowerBonusMultiplier;
         public float MoveSpeedBonusMultiplier;
         public float HealPerSecondBonus;
+        public float DefensePowerBonus;
         public float RemainingTime;
     }
 }

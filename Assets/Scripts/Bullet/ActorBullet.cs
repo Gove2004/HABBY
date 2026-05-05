@@ -53,7 +53,7 @@ public class ActorBullet : MonoBehaviour, IPoolable
     }
 
 
-    private async void MyDestroy()
+    private void MyDestroy()
     {
         // 等待轨迹渲染
         PoolCore.Return(this.gameObject);
@@ -93,6 +93,7 @@ public class ActorBullet : MonoBehaviour, IPoolable
     public ActorBullet SetMotion(Vector2 start, Vector2 direction, float speed)
     {
         transform.position = start;
+        transform.rotation = Quaternion.FromToRotation(Vector2.right, direction);
         if (trailRenderer != null)
         {
             trailRenderer.Clear();
@@ -110,6 +111,22 @@ public class ActorBullet : MonoBehaviour, IPoolable
     public ActorBullet SetThroughCount(int count)
     {
         throughCount = count;
+        return this;
+    }
+
+    public ActorBullet SetColor(Color color)
+    {
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            sr.color = color;
+        }
+        TrailRenderer tr = GetComponentInChildren<TrailRenderer>();
+        if (tr != null)
+        {
+            tr.startColor = color;
+            tr.endColor = new Color(color.r, color.g, color.b, 0f);
+        }
         return this;
     }
 }

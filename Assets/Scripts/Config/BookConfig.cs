@@ -29,7 +29,7 @@ public static class BookConfig
                 // 紫色三角形
                 Icon = MyStatic.GenerateTriangleTexture(size, purple),
                 Name = "巫术敌人",
-                Description = "危险的战场支援法师。善于在游荡中与玩家保持一个若即若离的安全判定范围。它懂得隔空施法，每隔数秒便会在场上随机挑出一名同伴，向其施加受自身攻击力强化的狂暴、疾行和回复增益状态。"
+                Description = "烦人的战场支援法师。善于在游荡中与玩家保持安全的施法距离。它懂得隔空施法，每隔一段时间便会在场上随机挑出一名同伴，为其施加以下之一的强化状态：短时间内生命回复、移速加成，或是防御力提升。"
             },
             new BookItem
             {
@@ -50,7 +50,7 @@ public static class BookConfig
                 // 紫色三角形
                 Icon = MyStatic.GenerateTriangleTexture(size, purple),
                 Name = "恩赐领主",
-                Description = "犹如神明降临般的终极大光环领主。自带不俗的移速和庞大的血量储备，擅于在极远距离控制大局。每隔一段时间，就能同时向场上最多5名怪物降下神圣恩赐——提供随自身攻击力成长的巨额伤害、极速与渐愈状态。"
+                Description = "犹如神明降临般的终极大光环领主。自带不俗的移速和庞大的血量储备，擅长在远距离控制大局。每隔一段时间秒，向场上所有的怪物降下神圣恩赐，随机给予生命回复、速度加成，或者防御力提升。"
             }
         };
     }
@@ -63,79 +63,79 @@ public static class BookConfig
             {
                 Icon = null,
                 Name = "生命果实",
-                Description = "+5点最大生命值"
+                Description = "提升最大生命值 (数值受局外天赋影响)\n可无限叠加\n<color=#E0E0E0>属性说明：增强容错率与生存能力。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "力量果实",
-                Description = "+1点攻击力"
+                Description = "提升攻击力 (数值受局外天赋影响)\n可无限叠加\n<color=#E0E0E0>属性说明：提升角色造成的所有基础伤害。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "坚韧果实",
-                Description = "+1点防御力"
+                Description = "提升防御力 (数值受局外天赋影响)\n可无限叠加\n<color=#E0E0E0>属性说明：减少受到敌人攻击时扣除的生命值。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "敏捷果实",
-                Description = "+10%点速度\n最多叠加10层"
+                Description = "+20%点速度\n最多叠加5层\n<color=#E0E0E0>属性说明：提升角色的移动速度，更容易拉扯与躲避敌人的攻击。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "暴击果实",
-                Description = "+5%点暴击率\n最多叠加10层"
+                Description = "+5%点暴击率\n最多叠加5层\n<color=#E0E0E0>属性说明：增加每一次攻击触发暴击（多倍伤害）的概率。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "暴伤果实",
-                Description = "+25%点暴击伤害"
+                Description = "+25%点暴击伤害\n可无限叠加\n<color=#E0E0E0>属性说明：提升触发暴击时的伤害加成倍率，让暴击收益更高。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "攻速果实",
-                Description = "+10%点攻速\n最多叠加10层"
+                Description = "+20%点攻速\n最多叠加5层\n<color=#E0E0E0>属性说明：缩短连续发射子弹的间隔时间，显著提升整体DPS。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "弹速果实",
-                Description = "+10%点弹速\n最多叠加10层"
+                Description = "+20%点弹速\n最多叠加5层\n<color=#E0E0E0>属性说明：提高子弹飞行的速度，降低敌人躲避命中判定的可能。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "穿透果实",
-                Description = "+1点子弹穿透数\n最多叠加5层"
+                Description = "+1点子弹穿透数\n最多叠加5层\n<color=#E0E0E0>属性说明：子弹击中敌人后不被立刻销毁，能对后方敌人继续造成伤害，应对虫海的利器。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "多重果实",
-                Description = "+1点子弹发射数\n最多叠加5层"
+                Description = "+1点子弹发射数\n最多叠加5层\n<color=#E0E0E0>属性说明：每次攻击时会分裂发射更多的子弹，形成大范围火力覆盖。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "弹幕果实",
-                Description = "+20%点子弹大小\n最多叠加5层"
+                Description = "+20%点子弹大小\n最多叠加5层\n<color=#E0E0E0>属性说明：增大子弹的模型及碰撞判定范围，更容易擦边命中目标。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "持续果实",
-                Description = "+0.5秒子弹持续时间\n最多叠加5层"
+                Description = "+1.0秒子弹持续时间\n最多叠加3层\n<color=#E0E0E0>属性说明：延长子弹存在于场上的衰减时间，变相提高子弹的最远射程。</color>"
             },
             new BookItem
             {
                 Icon = null,
                 Name = "刷新果实",
-                Description = "获得5次刷新机会"
+                Description = "增加商店刷新机会 (数值受局外天赋影响)\n可无限叠加\n<color=#E0E0E0>属性说明：可以在战斗内遇到不想要的果实时消耗次数刷新备选项。</color>"
             }
         };
     }

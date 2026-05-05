@@ -54,9 +54,11 @@ public abstract class Character : MonoBehaviour, IPoolable
     {
     }
 
+    public virtual int GetDefensePower() => DefensePower;
+
     public virtual void TakeDamageFrom(int damage, Vector2 fromPosition, bool isCritical = false)
     {
-        int actualDamage = Mathf.Max(damage - DefensePower, 0);
+        int actualDamage = Mathf.Max(damage - GetDefensePower(), 0);
         TakeDamage(actualDamage, isCritical);
         
         // Knockback
@@ -70,6 +72,8 @@ public abstract class Character : MonoBehaviour, IPoolable
     // HP
     public void TakeDamage(int amount, bool isCritical = false)
     {
+        AudioManager.Instance.PlayHit();
+        
         CurrentHP -= amount;
         if (CurrentHP < 0) CurrentHP = 0;
         OnHPChanged?.Invoke(CurrentHP);

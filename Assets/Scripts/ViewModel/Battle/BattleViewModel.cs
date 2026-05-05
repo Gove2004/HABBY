@@ -40,7 +40,7 @@ public class BattleViewModel : ViewModel
 
         // 系数
         this.ScoreMultiplier = scoreMultiplier;
-        this.difficultyMultiplier = difficultyMultiplier;
+        this.DifficultyMultiplier = difficultyMultiplier;
         // 加成
         this.isMoreHP = isMoreHP;
         this.isMoreDamage = isMoreDamage;
@@ -112,8 +112,8 @@ public class BattleViewModel : ViewModel
     private bool isMoreHP = false;
     private bool isMoreDamage = false;
     public float ScoreMultiplier = 1f; // 分数系数
-    private float difficultyMultiplier = 1f;  // 难度系数
-    private int setupLevel = 0;  // 当前敌人等级
+    public float DifficultyMultiplier = 1f;  // 难度系数
+    private float setupLevel = 0;  // 当前敌人等级
 
     private float nextWaveTime = 5f;  // 下一波敌人出现时间, 默认值为第一波
     private float waveInterval = 20f;   // 每波敌人间隔时间
@@ -133,7 +133,7 @@ public class BattleViewModel : ViewModel
             {
                 nextWaveTime = BattleTime + foreverWaveInterval; // 进入无尽模式，调整生成间隔时间
             }
-            setupLevel += (int)(1 * difficultyMultiplier); // 每波增加1级，乘以难度系数
+            setupLevel += 1 * DifficultyMultiplier; // 每波增加1级，乘以难度系数
 
             // 要生产的敌人
             List<int> enemyToDo = DifficultyConfig.difficultySettings[Mathf.Min(currentWave - 1, DifficultyConfig.difficultySettings.Count - 1)];
@@ -166,10 +166,9 @@ public class BattleViewModel : ViewModel
         GameObject enemyPrefab = SpawnManager.Instance.GetEnemyPrefab(enemyType);
         Vector2 spawnPosition = GetRandomSpawnPosition();
         GameObject enemyInstance = PoolCore.Get(enemyPrefab);
-        enemyInstance.transform.position = spawnPosition;
         Enemy enemyCharacter = enemyInstance.GetComponent<Enemy>();
         enemyCharacters.Add(enemyCharacter);
-        enemyCharacter.Setup(setupLevel);  // 构建并强化敌人
+        enemyCharacter.Setup((int)setupLevel);  // 构建并强化敌人
         enemyCharacter.SetBoost(isMoreHP, isMoreDamage);
         enemyCharacter.OnDeath += () =>
         {
@@ -177,6 +176,7 @@ public class BattleViewModel : ViewModel
             enemyCharacters.Remove(enemyCharacter);
             KillCount++; // 增加击杀数
         };
+        enemyInstance.transform.position = spawnPosition;
     }
 
     public Enemy[] GetAllEnemies()

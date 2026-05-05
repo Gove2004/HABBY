@@ -79,6 +79,7 @@ public class SelectViewModel : ViewModel
             new HeroInfoItemData(PlayerAttributeType.MoreHPFurits),
             new HeroInfoItemData(PlayerAttributeType.MoreATKFurits),
             new HeroInfoItemData(PlayerAttributeType.MoreDEFFurits),
+            new HeroInfoItemData(PlayerAttributeType.MoreRefreshFurits),
         };
     }
 

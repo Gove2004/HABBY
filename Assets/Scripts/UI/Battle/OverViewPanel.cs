@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel;
+using DG.Tweening;
 using GoveKits.Runtime.Core;
 using GoveKits.Runtime.UI;
 using UnityEngine;
@@ -12,8 +14,14 @@ public class OverViewPanel : ViewPanel<OverViewModel>
         TMPTexts["Context"].text = GetFinalContext();
 
         Time.timeScale = 0f; // 暂停游戏
+        ShowAnimation();
     }
 
+
+    private void ShowAnimation()
+    {
+        transform.DOScale(Vector3.one, 0.5f).From(Vector3.zero).SetEase(Ease.OutBack).SetUpdate(true);
+    }
 
     public override void OnHide()
     {
@@ -21,7 +29,6 @@ public class OverViewPanel : ViewPanel<OverViewModel>
 
         Time.timeScale = 1f; // 恢复游戏
     }
-
 
 
     protected override void OnDataChanged(object sender, PropertyChangedEventArgs e)
@@ -35,6 +42,7 @@ public class OverViewPanel : ViewPanel<OverViewModel>
         switch (btnName)
         {
             case "OK":
+                AudioManager.Instance.PlayUIClick();
                 Controller.HidePopup<OverViewPanel>();
                 VMContainer.Get<BattleViewModel>().ClearBattle();
                 

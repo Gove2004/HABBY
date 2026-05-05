@@ -9,12 +9,9 @@ public class BuffManager : CSharpSingleton<BuffManager>
 {
     public List<BaseBuff> EnemyBuffs = new List<BaseBuff>()
     {
-        new Enemy_AttackPower_Buff(),
-        new Enemy_MoveSpeed_Buff(),
-        new Enemy_Regen_Buff(),
-        new Enemy_AttackPower_Buff(),
-        new Enemy_MoveSpeed_Buff(),
-        new Enemy_Regen_Buff(),
+        new Enemy_Recovery_Buff(),
+        new Enemy_Haste_Buff(),
+        new Enemy_Armor_Buff()
     };
 
 

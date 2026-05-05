@@ -6,7 +6,7 @@ public class BufferEnemy : Enemy
 {
 	private float buffTimer = 0f;
 
-	private const float BuffInterval = 4f;
+	private const float BuffInterval = 2.5f;
 	private const float BuffRange = 12f;
 
 	public override void Setup(int level)

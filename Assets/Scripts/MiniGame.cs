@@ -28,6 +28,7 @@ public class MiniGame : MonoBehaviour
         bulletShootTimer += Time.deltaTime;
         if (bulletShootTimer >= 1f)
         {
+            AudioManager.Instance.PlayFire();
             minBullet.transform.position = minPlayer.transform.position; // 从玩家位置发射
             // bulletTrail.Clear(); // 清除之前的轨迹
             minBullet.SetActive(true);
@@ -43,6 +44,7 @@ public class MiniGame : MonoBehaviour
         // 命中
         if (minBullet.activeSelf && Vector2.Distance(minBullet.transform.position, minEnemy.transform.position) < 0.5f)
         {
+            AudioManager.Instance.PlayHit();
             minBullet.SetActive(false); // 隐藏子弹
 
             // 漂字

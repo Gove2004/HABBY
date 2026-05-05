@@ -7,7 +7,7 @@ public class GodBoss : Enemy
 {
 	private float buffTimer = 0f;
 
-	private const float BuffInterval = 5f;
+	private const float BuffInterval = 2.5f;
 	private const float BuffRange = 18f;
 
 
@@ -79,29 +79,11 @@ public class GodBoss : Enemy
 
 		if (candidates.Count == 0) return;
 
-		int n = 5;
-		// shuffle candidates (Fisher-Yates)
-		for (int i = 0; i < candidates.Count; i++)
+		// GodBoss给场上"每个"敌人施加1种随机Buff
+		foreach (var enemy in candidates)
 		{
-			int j = Random.Range(i, candidates.Count);
-			var tmp = candidates[i];
-			candidates[i] = candidates[j];
-			candidates[j] = tmp;
-		}
-
-		int take = Mathf.Min(n, candidates.Count);
-		for (int k = 0; k < take; k++)
-		{
-			var enemy = candidates[k];
-			BaseBuff attackBuff = BuffManager.Instance.GetEnemyBuff();
-			BaseBuff speedBuff = BuffManager.Instance.GetEnemyBuff();
-			BaseBuff sustainBuff = BuffManager.Instance.GetEnemyBuff();
-
-			attackBuff?.Apply(enemy, CurrentAttackPower);
-			speedBuff?.Apply(enemy, CurrentAttackPower);
-			sustainBuff?.Apply(enemy, CurrentAttackPower);
-
-			enemy.Heal(Mathf.Max(1, Level / 2));
+			BaseBuff randomBuff = BuffManager.Instance.GetEnemyBuff();
+			randomBuff?.Apply(enemy, CurrentAttackPower);
 		}
 	}
 }

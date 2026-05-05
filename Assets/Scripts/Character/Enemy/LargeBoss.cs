@@ -14,7 +14,7 @@ public class LargeBoss : Enemy
 
 	private const float ChaseDistance = 10f;
 	private const float ChargeCooldown = 2.5f;
-	private const float ChargeDuration = 0.5f;
+	private const float ChargeDuration = 1f;
 	private const float ChargeSpeedMultiplier = 5f;
 	private const float ChargeChance = 0.8f;
 

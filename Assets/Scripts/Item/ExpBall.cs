@@ -67,6 +67,7 @@ public class ExpBall : MonoBehaviour, IPoolable
             Player player = collision.GetComponent<Player>();
             if (player != null)
             {
+                AudioManager.Instance.PlayExpBall();
                 player.AddExp(expValue);
             }
 

@@ -83,6 +83,7 @@ public class PauseViewModel : ViewModel
         info += $"击杀敌人: {battleVM.KillCount}\n";
         info += $"当前得分: {battleVM.Score}\n";
         info += $"得分倍率: {battleVM.ScoreMultiplier:F1}x\n";
+        info += $"难度倍率: {battleVM.DifficultyMultiplier:F1}x\n";
         
         return info;
     }

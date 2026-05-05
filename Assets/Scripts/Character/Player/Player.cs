@@ -13,6 +13,8 @@ public abstract class Player : Character
     public int HealPerFiveSeconds = 0;
     private float healTimer = 0f;
 
+    public int pendingLevelUps = 0;
+
     protected override void Update()
     {
         base.Update();
@@ -26,6 +28,13 @@ public abstract class Player : Character
             {
                 Heal(HealPerFiveSeconds);
             }
+        }
+
+        // 处理积攒的升级事件
+        if (pendingLevelUps > 0 && Time.timeScale > 0f)
+        {
+            pendingLevelUps--;
+            TriggerLevelUp();
         }
     }
 
@@ -44,7 +53,7 @@ public abstract class Player : Character
             exp -= nextLevelExpThreshold;
             OnExpChanged?.Invoke(exp);
             level++;
-            TriggerLevelUp();
+            pendingLevelUps++;
             nextLevelExpThreshold = MyStatic.GetExpThresholdForLevel(level);
         }
     }

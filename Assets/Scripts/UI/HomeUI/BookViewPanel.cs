@@ -1,4 +1,6 @@
+using System;
 using System.ComponentModel;
+using DG.Tweening;
 using GoveKits.Runtime.Core;
 using GoveKits.Runtime.UI;
 using UnityEngine;
@@ -10,7 +12,26 @@ public class BookViewPanel : ViewPanel<BookViewModel>
     {
         base.OnShow(payload);
 
+        ShowAnimation();
         ShowEnemy();  // 默认显示敌人
+    }
+
+    private void ShowAnimation()
+    {
+        transform.DOScale(Vector3.one, 0.5f).From(Vector3.zero).SetEase(Ease.OutBack);
+    }
+
+    public override void OnHide()
+    {
+        HideAnimation(base.OnHide);
+    }
+
+    private void HideAnimation(Action onComplete)
+    {
+        // 向左侧飞出
+        transform.DOScale(Vector3.zero, 0.5f).From(Vector3.one).SetEase(Ease.InBack).OnComplete(() => {
+            onComplete?.Invoke();
+        });
     }
 
 
@@ -26,15 +47,19 @@ public class BookViewPanel : ViewPanel<BookViewModel>
         switch (btnName)
         {
             case "Back":
+                AudioManager.Instance.PlayUIClick();
                 OnBackBtnClicked();
                 break;
             case "Enemy":
+                AudioManager.Instance.PlayUIClick();
                 ShowEnemy();
                 break;
             case "Buff":
+                AudioManager.Instance.PlayUIClick();
                 ShowBuff();
                 break;
             case "Hero":
+                AudioManager.Instance.PlayUIClick();
                 ShowHero();
                 break;
         }
@@ -73,7 +98,7 @@ public class BookViewPanel : ViewPanel<BookViewModel>
         int rowCount = Mathf.CeilToInt(bookItems.Length / 4f);
         for (int r = 0; r < rowCount; r++)
         {
-            GameObject row = Object.Instantiate(RowContainer, bookItemContainer);
+            GameObject row = UnityEngine.Object.Instantiate(RowContainer, bookItemContainer);
             row.SetActive(true);
             for (int i = 0; i < 4; i++)
             {
@@ -100,6 +125,8 @@ public class BookViewPanel : ViewPanel<BookViewModel>
 
     private void OnBookItemClicked(BookItem item)
     {
+        AudioManager.Instance.PlayUIClick();
+        
         Images["Icon"].sprite = item.Icon;
         TMPTexts["Name"].text = item.Name;
         TMPTexts["Description"].text = item.Description;

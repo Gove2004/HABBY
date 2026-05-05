@@ -129,9 +129,10 @@ public class ShooterEnemy : Enemy
 			float currentAngle = startAngle + angleStep * i + UnityEngine.Random.Range(-2f, 2f);
 			Vector2 direction = Quaternion.Euler(0f, 0f, currentAngle) * baseDirection;
 			bullet.SetDamage(CurrentAttackPower)
-				.SetLifeTime(2.5f)
-				.SetSize(0.9f)
+				.SetLifeTime(10f)
+				.SetSize(1f)
 				.SetThroughCount(0)
+				.SetColor(Color.red) // 敌人子弹颜色为红色
 				.SetMotion(transform.position, direction, BulletSpeed);
 		}
 	}

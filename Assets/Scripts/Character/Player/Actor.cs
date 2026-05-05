@@ -1,3 +1,4 @@
+using DG.Tweening;
 using GoveKits.Runtime.Core;
 using GoveKits.Runtime.UI;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class Actor : Player
     public int BulletThroughCount = 0; // 穿透数，0表示不穿透
     public int BulletFireCount = 1; // 发射数，1表示单发
 
+    public Transform bowTransform; // 用于调整弓箭的朝向
+
 
     private void Start()
     {
@@ -29,11 +32,16 @@ public class Actor : Player
         
         shootTimer += Time.deltaTime;
 
+        // 朝向鼠标
+        Vector2 mousePos = MyInputManager.Instance.MousePosition;
+        Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        Vector2 direction = (worldMousePos - (Vector2)transform.position).normalized;
+        bowTransform.rotation = Quaternion.FromToRotation(Vector2.right, direction);
+
         if (MyInputManager.Instance.IsMouseHeld && shootTimer >= 1f / AttackSpeed)
         {
-            Vector2 mousePos = MyInputManager.Instance.MousePosition;
-            Vector2 worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-            Shoot(worldMousePos);
+            
+            Shoot(direction);
             
             shootTimer = 0f; // 重置射击计时器
         }
@@ -81,9 +89,10 @@ public class Actor : Player
     public float spreadGrowthRate = 0.5f;   // 散射增长速率
     public bool dynamicSpread = true;       // 是否动态调整散射角度
 
-    private void Shoot(Vector2 targetPos)
+    private void Shoot(Vector2 dir)
     {
-        Vector2 baseDirection = (targetPos - (Vector2)transform.position).normalized;
+        AudioManager.Instance.PlayFire();
+        
         GameObject bulletObj = SpawnManager.Instance.GetBulletPrefab();
         
         // 动态计算散射角度
@@ -108,9 +117,10 @@ public class Actor : Player
             
             // 计算当前子弹的角度
             float currentAngle = startAngle + angleStep * i;
-            Vector2 bulletDirection = Quaternion.Euler(0, 0, currentAngle) * baseDirection;
+            Vector2 bulletDirection = Quaternion.Euler(0, 0, currentAngle) * dir.normalized;
             
             bullet.SetMotion(transform.position, bulletDirection, BulletSpeed);
+            bullet.SetColor(Color.white); // 玩家子弹颜色为 白色
         }
     }
 
