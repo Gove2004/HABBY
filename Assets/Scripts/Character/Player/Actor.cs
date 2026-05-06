@@ -102,8 +102,8 @@ public class Actor : Player
         
         // 计算每颗子弹的角度
         float angleStep = BulletFireCount > 1 ? currentSpreadAngle / (BulletFireCount - 1) : 0f;
-        float startAngle = -currentSpreadAngle / 2f;
-        
+        float startAngle = BulletFireCount > 1 ? -currentSpreadAngle / 2f : 0f; // 修复：单发时必须是0度
+
         for (int i = 0; i < BulletFireCount; i++)
         {
             bool isCritical = Random.value < CritRate;

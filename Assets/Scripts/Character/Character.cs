@@ -58,7 +58,8 @@ public abstract class Character : MonoBehaviour, IPoolable
 
     public virtual void TakeDamageFrom(int damage, Vector2 fromPosition, bool isCritical = false)
     {
-        int actualDamage = Mathf.Max(damage - GetDefensePower(), 0);
+        // 至少造成1点伤害
+        int actualDamage = Mathf.Max(damage - GetDefensePower(), 1);
         TakeDamage(actualDamage, isCritical);
         
         // Knockback
